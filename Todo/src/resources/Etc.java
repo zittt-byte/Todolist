@@ -1,5 +1,8 @@
+package resources;
+
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.PopupMenu;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 
@@ -22,5 +25,11 @@ public class Etc {
         Image image = icon.getImage();
         Image newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
         return new ImageIcon(newimg);
+    }
+
+    static class boxFiller extends PopupMenu {
+
+        public boxFiller(Dimension dimension) {
+        }
     }
 }

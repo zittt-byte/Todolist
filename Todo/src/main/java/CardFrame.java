@@ -1,9 +1,10 @@
-import component.*;
+package Todolist.Todo.src.main.java;
+
 import com.formdev.flatlaf.FlatClientProperties;
+import component.CustomPasswordField;
+import component.CustomTextField;
 import javax.swing.*;
 import java.awt.*;
-import component.CustomTextField;
-import java.awt.font.TextAttribute;
 import resources.Etc;
 
 public class CardFrame extends JInternalFrame {
@@ -55,9 +56,9 @@ public class CardFrame extends JInternalFrame {
         btnLogin.setBackground(Color.orange);
         btnLogin.setForeground(Color.white);
         btnLogin.putClientProperty(FlatClientProperties.STYLE, TextFieldProperty);
-        btnLogin.setMinimumSize(CustomTextField.fixedSize);
-        btnLogin.setPreferredSize(CustomTextField.fixedSize);
-        btnLogin.setMaximumSize(CustomTextField.fixedSize);
+        btnLogin.setMinimumSize(CustomTextField.FIXEDSIZE);
+        btnLogin.setPreferredSize(CustomTextField.FIXEDSIZE);
+        btnLogin.setMaximumSize(CustomTextField.FIXEDSIZE);
         btnLogin.setAlignmentX(Box.CENTER_ALIGNMENT); 
         
         
