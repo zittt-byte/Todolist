@@ -13,7 +13,7 @@ public class UserRegistration {
         // สเต็ปที่ 1: ตรวจสอบฝั่ง Java ก่อนส่งไปฐานข้อมูล (Validation)
         // ตามโจทย์: รหัส PIN ต้องมี 4 ตัวขึ้นไป
         if (pin == null || pin.length() < 4 || name == null || email == null ) {
-            System.out.println("❌ สมัครไม่สำเร็จ: PIN ต้องมีอย่างน้อย 4 ตัว");
+            System.out.println("❌ Failed: PIN have to be at least 4 digit");
             return false; // หยุดการทำงานทันที ไม่ต้องคุยกับฐานข้อมูล
         }
 
@@ -37,9 +37,9 @@ public class UserRegistration {
             // สเต็ปที่ 6: จัดการ Error (เช่น กรณีคนใช้อีเมลซ้ำ)
             // ถ้าจำได้ เราตั้งค่าอีเมลเป็น UNIQUE ไว้ในโครงสร้างตาราง
             if (e.getMessage().contains("UNIQUE constraint failed")) {
-                System.out.println("❌ สมัครไม่สำเร็จ: อีเมลนี้ (" + email + ") มีในระบบแล้ว");
+                System.out.println("❌ Error: This email (" + email + ") already in system");
             } else {
-                System.out.println("❌ เกิดข้อผิดพลาดกับฐานข้อมูล: " + e.getMessage());
+                System.out.println("❌ DB error: " + e.getMessage());
             }
             return  false;
         }

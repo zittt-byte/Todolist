@@ -1,5 +1,10 @@
+import component.*;
+import com.formdev.flatlaf.FlatClientProperties;
 import javax.swing.*;
 import java.awt.*;
+import component.CustomTextField;
+import java.awt.font.TextAttribute;
+import resources.Etc;
 
 public class CardFrame extends JInternalFrame {
 
@@ -9,6 +14,7 @@ public class CardFrame extends JInternalFrame {
     public CardFrame() {
         setTitle("TodoList");
         setSize(350, 300);
+        setBackground(Color.WHITE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         cardLayout = new CardLayout();
@@ -28,20 +34,68 @@ public class CardFrame extends JInternalFrame {
     }
 
     private JPanel createLoginPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.white);
+        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JPasswordField txtPin = new JPasswordField();
-        JTextField txtUser = new JTextField();
-        JButton btnLogin = new JButton("Login");
-        JButton btnGoRegister = new JButton("สร้างบัญชีใหม่");
+        JPasswordField txtPin = new CustomPasswordField("PIN",new ImageIcon(getClass().getResource("/resources/lock.png")));
+   
+        String TextFieldProperty = "arc:20;focusWidth:0;innerFocusWidth:0;";
+        
+ 
 
-        panel.add(new JLabel("Username or Email:"));
+        JTextField txtUser = new CustomTextField("Username",new ImageIcon(getClass().getResource("/resources/mail.png")));
+        
+        txtUser.setAlignmentX(Box.CENTER_ALIGNMENT); 
+        txtPin.setAlignmentX(Box.CENTER_ALIGNMENT); 
+        
+        
+        JButton btnLogin = new JButton("Login");
+        btnLogin.setBackground(Color.orange);
+        btnLogin.setForeground(Color.white);
+        btnLogin.putClientProperty(FlatClientProperties.STYLE, TextFieldProperty);
+        btnLogin.setMinimumSize(CustomTextField.fixedSize);
+        btnLogin.setPreferredSize(CustomTextField.fixedSize);
+        btnLogin.setMaximumSize(CustomTextField.fixedSize);
+        btnLogin.setAlignmentX(Box.CENTER_ALIGNMENT); 
+        
+        
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
+        footer.setBackground(Color.white);
+        footer.setBorder(null);
+        footer.add(new JLabel("Don't have an account?"));
+        JButton btnGoRegister = new JButton("Register");
+        btnGoRegister.setForeground(Color.orange);
+        btnGoRegister.setMargin(new Insets(5,5,5,5));
+        btnGoRegister.setBorder(null);
+        footer.add(btnGoRegister);
+        
+        
+        JLabel title = new JLabel(Greeting.getWord() + "!");
+        title.setFont(new Font("Inter",Font.BOLD,24));
+        title.setForeground(Color.black);
+        title.setAlignmentX(Box.CENTER_ALIGNMENT); 
+        
+        
+        JLabel desc = new JLabel("Sign In to get Started");
+        desc.setFont(new Font("Inter",Font.PLAIN,16));
+        desc.setForeground(Color.gray);
+        desc.setAlignmentX(Box.CENTER_ALIGNMENT); 
+        
+        panel.add(title,FlowLayout.LEFT);
+        panel.add(desc);
+        panel.add(Etc.boxFiller(10,50));
+        
+
+
+        
         panel.add(txtUser);
-        panel.add(new JLabel("Password :"));
+        panel.add(Etc.boxFiller(10,10));
         panel.add(txtPin);
+        panel.add(Etc.boxFiller(10,30));
         panel.add(btnLogin);
-        panel.add(btnGoRegister);
+        panel.add(footer);
 
         btnGoRegister.addActionListener(e -> {
             cardLayout.show(mainContainer, "REGISTER_SCREEN");
@@ -53,11 +107,11 @@ public class CardFrame extends JInternalFrame {
 
             boolean isSuccess = UserLogin.authenticate(username,password);
             if (isSuccess) {
-                JOptionPane.showMessageDialog(this, "กำลังเข้าสู่ระบบ...");
+                JOptionPane.showMessageDialog(this, "Logging in!...");
                 // dashborad open ???
             }
             else
-                JOptionPane.showMessageDialog(this,"ผู้ใช้ไม่ถูกต้อง");
+                JOptionPane.showMessageDialog(this,"Incorrect User");
 
         });
 
@@ -71,14 +125,14 @@ public class CardFrame extends JInternalFrame {
         JTextField txtName = new JTextField();
         JTextField txtEmail = new JTextField();
         JPasswordField txtPin = new JPasswordField();
-        JButton btnRegister = new JButton("สมัครสมาชิก");
-        JButton btnBackToLogin = new JButton("กลับไปหน้า Login");
+        JButton btnRegister = new JButton("Register");
+        JButton btnBackToLogin = new JButton("Login");
 
-        panel.add(new JLabel("ชื่อ:"));
+        panel.add(new JLabel("Name:"));
         panel.add(txtName);
-        panel.add(new JLabel("อีเมล:"));
+        panel.add(new JLabel("Email:"));
         panel.add(txtEmail);
-        panel.add(new JLabel("รหัส PIN (4 หลัก):"));
+        panel.add(new JLabel("PIN (4 Digit):"));
         panel.add(txtPin);
         panel.add(btnBackToLogin);
         panel.add(btnRegister);
@@ -94,16 +148,18 @@ public class CardFrame extends JInternalFrame {
             boolean isSuccess = UserRegistration.registerUser(name, email, pin);
 
             if (isSuccess) {
-                JOptionPane.showMessageDialog(this, "สมัครสมาชิกสำเร็จ!");
+                JOptionPane.showMessageDialog(this, "Register success!");
                 cardLayout.show(mainContainer, "LOGIN_SCREEN");
             } else {
-                JOptionPane.showMessageDialog(this, "ข้อมูลไม่ถูกต้อง หรืออีเมลซ้ำ", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Duplicate email", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         return panel;
     }
+    
 
+    
     public static void main(String[] args) {
         new CardFrame();
     }

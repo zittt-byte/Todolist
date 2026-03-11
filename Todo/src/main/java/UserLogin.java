@@ -21,15 +21,15 @@ public class UserLogin {
 
             if (rs.next()) {
                 String userName = rs.getString("name");
-                System.out.println("✅ เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ: " + userName);
+                System.out.println("✅ Log in success: Welcome: " + userName);
                 return true;
             } else {
-                System.out.println("❌ เข้าสู่ระบบไม่สำเร็จ: ชื่อผู้ใช้/อีเมล หรือ PIN ไม่ถูกต้อง");
+                System.out.println("❌ Log in failed: ชื่อผู้ใช้/อีเมล หรือ PIN ไม่ถูกต้อง");
                 return false;
             }
 
         } catch (SQLException e) {
-            System.out.println("❌ เกิดข้อผิดพลาดกับฐานข้อมูล: " + e.getMessage());
+            System.out.println("❌ DB Error: " + e.getMessage());
             return false;
         }
     }
