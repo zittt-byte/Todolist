@@ -1,10 +1,12 @@
+package Todolist.Todo.src.main.java;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseSetup {
-    public static void main(String[] args) {
+    public static void DBSetup() {
 
         // 1. กำหนด URL (วางไฟล์ไว้ที่หน้าแรกของ Project เพื่อความชัวร์)
         // ไฟล์ Users.db จะถูกสร้างขึ้นมาเองอัตโนมัติในโฟลเดอร์ Todo
@@ -27,7 +29,7 @@ public class DatabaseSetup {
             stmt.execute(sql);
 
             System.out.println("===============================");
-            System.out.println("✅ Setup ฐานข้อมูลสำเร็จ!");
+            System.out.println("✅ Setup DB success");
             System.out.println("📍 ไฟล์ถูกสร้างที่: " + System.getProperty("user.dir") + "/Users.db");
             System.out.println("===============================");
 

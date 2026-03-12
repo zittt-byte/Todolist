@@ -1,4 +1,6 @@
+package Todolist.Todo.src.main.java;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
 
@@ -6,8 +8,13 @@ public class MainMDI {
     public JDesktopPane desktopPane;
     public JFrame frame;
     public  MainMDI () {
+        FlatLightLaf.setup();
+        UIManager.put("defaultFont", new Font("Inter", Font.PLAIN, 14));
         frame = new JFrame("Main MDi");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         desktopPane = new JDesktopPane();
+        DatabaseSetup.DBSetup();
+        
         CardFrame LoginUI = new CardFrame();
 
         frame.setSize(700,700);
