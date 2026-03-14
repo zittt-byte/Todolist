@@ -8,16 +8,16 @@ import resources.Etc;
  *
  * @author User
  */
-public class CustomPasswordField extends JPasswordField {
+public class ComPasswordField extends JPasswordField {
 
     
-    public CustomPasswordField(String name,ImageIcon icon){
+    public ComPasswordField(String name,ImageIcon icon){
         putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, name);
-        putClientProperty(FlatClientProperties.STYLE, CustomTextField.TEXTFIELDPROPERTY);
+        putClientProperty(FlatClientProperties.STYLE, ComTextField.TEXTFIELDPROPERTY);
         putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, Etc.resizeImageIcon(icon,20,20));
-        setMinimumSize(CustomTextField.FIXEDSIZE);
-        setPreferredSize(CustomTextField.FIXEDSIZE);
-        setMaximumSize(CustomTextField.FIXEDSIZE);
+        setMinimumSize(ComTextField.FIXEDSIZE);
+        setPreferredSize(ComTextField.FIXEDSIZE);
+        setMaximumSize(ComTextField.FIXEDSIZE);
     }
 
     
