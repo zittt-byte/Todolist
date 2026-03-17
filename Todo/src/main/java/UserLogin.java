@@ -2,11 +2,18 @@ package Todolist.Todo.src.main.java;
 
 import java.sql.*;
 
+/**
+ *
+ * @Yasitt
+ */
+
+
 public class UserLogin {
 
     private static final String URL = "jdbc:sqlite:Users.db";
 
     public static boolean authenticate(String identifier, String pin) {
+        
 
         // ปรับ SQL ให้เช็คว่า identifier ตรงกับ name หรือ email อย่างใดอย่างหนึ่ง
         String sql = "SELECT name FROM users WHERE (name = ? OR email = ?) AND pin = ?";
@@ -15,8 +22,8 @@ public class UserLogin {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             // กำหนดค่าให้ Parameter (ต้องใส่ identifier 2 รอบ เพราะมี ? 2 ตัวแรก)
-            pstmt.setString(1, identifier); // แทนค่า ? ตัวแรก (name)
-            pstmt.setString(2, identifier); // แทนค่า ? ตัวที่สอง (email)
+            pstmt.setString(1, identifier.toLowerCase()); // แทนค่า ? ตัวแรก (name)
+            pstmt.setString(2, identifier.toLowerCase()); // แทนค่า ? ตัวที่สอง (email)
             pstmt.setString(3, pin);        // แทนค่า ? ตัวที่สาม (pin)
 
             ResultSet rs = pstmt.executeQuery();

@@ -6,6 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 import resources.Etc;
 
+/**
+ *
+ * @Yasitt
+ * @Kanin
+ */
+
+
+
 public class CardFrame extends JInternalFrame {
 
     private CardLayout cardLayout;

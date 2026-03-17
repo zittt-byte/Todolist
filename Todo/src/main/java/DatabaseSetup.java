@@ -5,6 +5,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ *
+ * @Yasitt
+ */
+
+
 public class DatabaseSetup {
     public static void DBSetup() {
 
