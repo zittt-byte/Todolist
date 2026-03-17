@@ -4,6 +4,13 @@ import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ *
+ * @Yasitt
+ */
+
+
+
 public class MainMDI {
     public JDesktopPane desktopPane;
     public JFrame frame;

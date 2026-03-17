@@ -5,13 +5,20 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ *
+ * @Yasitt
+ */
+
+
 public class UserRegistration {
 
     // กำหนด URL ของฐานข้อมูลไว้เป็นตัวแปร เพื่อให้เรียกใช้ซ้ำได้ง่าย
     private static final String URL = "jdbc:sqlite:Users.db";
 
     public static boolean registerUser(String name, String email, String pin) {
-
+        name = name.toLowerCase();
+        email = email.toLowerCase();
         // สเต็ปที่ 1: ตรวจสอบฝั่ง Java ก่อนส่งไปฐานข้อมูล (Validation)
         // ตามโจทย์: รหัส PIN ต้องมี 4 ตัวขึ้นไป
         if (pin == null || pin.length() < 4 || name == null || email == null ) {
