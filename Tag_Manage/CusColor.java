@@ -30,8 +30,17 @@ public class CusColor {
 
     public static CusColor colorFromDropdown(String color) {
         for (int i=0;i<COLORNAME.length;i++) {
-            if (color.equals(COLORNAME[i])) {
+            if (color.toLowerCase().equals(COLORNAME[i].toLowerCase())) {
                 return COLORLIST[i];
+            }
+        }
+        return null;
+    }
+    
+    public static String getColor(CusColor color) {
+        for (int i=0;i<COLORLIST.length;i++) {
+            if (color.equals(COLORLIST[i])) {
+                return COLORNAME[i];
             }
         }
         return null;
@@ -45,9 +54,7 @@ public class CusColor {
         int red = color.getRed();
         int green = color.getGreen();
         int blue = color.getBlue();
-
         return new Color(red,green,blue);
-
     }
     
     
