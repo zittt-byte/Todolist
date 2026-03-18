@@ -47,6 +47,6 @@ public class Tag extends JPanel{
     public void setColor(CusColor color) {
         this.color = color;
     }
-    
+        
     
 }
