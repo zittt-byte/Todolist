@@ -30,7 +30,7 @@ public class CusColor {
         this.textColor = textColor;
     }
 
-    public static CusColor colorFromDropdown(String color) {
+    public static CusColor colorFromString(String color) {
         for (int i=0;i<COLORNAME.length;i++) {
             if (color.toLowerCase().equals(COLORNAME[i].toLowerCase())) {
                 return COLORLIST[i];
@@ -58,6 +58,8 @@ public class CusColor {
         int blue = color.getBlue();
         return new Color(red,green,blue);
     }
+    
+    
     
     
 }

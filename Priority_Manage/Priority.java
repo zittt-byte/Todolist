@@ -33,7 +33,7 @@ public class Priority extends JPanel{
     }
 
     public Priority(String name, String color,int order) {
-        this(name,CusColor.colorFromDropdown(color),0);
+        this(name,CusColor.colorFromString(color),0);
     }
 
     public String getName() {

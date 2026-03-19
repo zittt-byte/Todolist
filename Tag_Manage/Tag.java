@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+import Todolist.Priority_Manage.CusColor;
 import com.formdev.flatlaf.*;
 import java.awt.*;
 import javax.swing.*;
@@ -29,7 +30,7 @@ public class Tag extends JPanel{
     }
 
     public Tag(String name, String color) {
-        this(name,CusColor.colorFromDropdown(color));
+        this(name,CusColor.colorFromString(color));
     }
 
     public String getName() {

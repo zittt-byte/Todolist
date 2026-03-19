@@ -82,7 +82,7 @@ public class PriorithyManager implements ActionListener{
         dialog.setVisible(true);
         Object[] newData = dialog.getData();
         if (newData != null) {
-            Priority tag = new Priority((String) newData[0], CusColor.colorFromDropdown( (String)newData[1] ),(int) newData[2]);
+            Priority tag = new Priority((String) newData[0], CusColor.colorFromString( (String)newData[1] ),(int) newData[2]);
             tags.add(tag);
             model.addRow(new Object[]{tag.getName(), tag.getColor(),tag.getOrder()});
         }
@@ -116,7 +116,7 @@ public class PriorithyManager implements ActionListener{
             Object[] newData = dialog.getData();
             if (newData != null) {
                 existing.setName((String) newData[0]);
-                existing.setColor(CusColor.colorFromDropdown( (String)newData[1] ));         
+                existing.setColor(CusColor.colorFromString( (String)newData[1] ));         
                 model.setValueAt(existing.getName(), selectedRow, 0);
                 model.setValueAt(existing.getColor(), selectedRow, 1);
             }
