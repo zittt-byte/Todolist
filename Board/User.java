@@ -1,19 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package Board;
+package Todolist.Board;
+
+
 import Todolist.Priority_Manage.CusColor;
 import com.formdev.flatlaf.*;
-import com.formdev.flatlaf.ui.*;
 import component.RoundedTopPanel;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import static resources.Etc.boxFiller;
+import java.time.format.*;
+
 
 /**
  *
@@ -25,15 +22,20 @@ public class User extends JFrame {
     
     public User(){
         Contains = new ArrayList<Board>();
-        panel = new JPanel(new FlowLayout());
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER,10, 10));
         Board a = new Board("OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026","Dr. Taravichet","😬","Green");
         Board b = new Board("DS&A","Dr. Taravichet","🤢","BLUE");
         Board c = new Board("Stat and Prob","Dr. Sooksan","🤢","Red");
+
+        panel.setPreferredSize(new Dimension(700,700));
         setSize(700,700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
-        add(panel);
+
+        
+        this.add(panel);
+        
         Add(a);Add(b);Add(c);
+        setVisible(true);
         
     }
     
@@ -63,7 +65,7 @@ public class User extends JFrame {
         };
 
         RoundedTopPanel banner = new RoundedTopPanel(16);
-        JLabel title = new JLabel("<html>" + board.getName() + "</html>");
+        JLabel title = new JLabel("<html>&nbsp;" + board.getName() + "</html>");
         pane.setPreferredSize(new Dimension(280, 160));
 
         banner.setPreferredSize(new Dimension(0, 50));
@@ -87,6 +89,7 @@ public class User extends JFrame {
             Container parent = pane.getParent();
             if (parent != null) {
                 Remove(board);
+                Contains.remove(board);
                 System.out.println(Contains);
             }
         });
@@ -115,13 +118,15 @@ public class User extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isDescendingFrom(e.getComponent(), closeButton)) return;
+                
+                System.out.println("Board clicked: " + board.getUuid());
 
-                System.out.println("Board clicked: " + board.getName());
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                pane.setBackground(CusColor.hexToColorObject("#f3f4f6")); // subtle press feedback
+                pane.setBackground(CusColor.hexToColorObject("#f3f4f6")); 
+                
             }
 
             @Override
@@ -132,11 +137,9 @@ public class User extends JFrame {
 
         pane.addMouseListener(hoverListener);
         banner.addMouseListener(hoverListener);
-        title.addMouseListener(hoverListener);
 
         pane.add(banner, BorderLayout.NORTH);
-        pane.add(title);
-        title.setFont(new Font("Inter", Font.BOLD, 24));
+        title.setFont(new Font("Inter", Font.PLAIN, 24));
         pane.putClientProperty(FlatClientProperties.STYLE, "arc:16;background:#ffffff;border: 0,0,0,0,#fbbf23;");
 
         DateTimeFormatter customFormatter;
@@ -149,10 +152,24 @@ public class User extends JFrame {
         layeredPane.setPreferredSize(new Dimension(280, 120));
 
         JLabel timestamp = new JLabel(board.getCreatedAt().format(customFormatter));
-        timestamp.setFont(new Font("Inter", Font.PLAIN, 12));
+        timestamp.setFont(new Font("Inter", Font.BOLD, 12));
         timestamp.setForeground(CusColor.hexToColorObject(CusColor.GRAY.textColor));
         timestamp.addMouseListener(hoverListener);
-        pane.add(timestamp, BorderLayout.SOUTH);
+        
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setOpaque(false);
+        titlePanel.add(Box.createHorizontalStrut(8), BorderLayout.WEST);
+        titlePanel.add(title, BorderLayout.CENTER);
+        
+        JPanel timestampPanel = new JPanel(new BorderLayout());
+        timestampPanel.setOpaque(false);
+        timestampPanel.add(Box.createHorizontalStrut(16), BorderLayout.WEST);
+        timestampPanel.add(timestamp, BorderLayout.CENTER);
+        
+        titlePanel.addMouseListener(hoverListener);
+        
+        pane.add(titlePanel);
+        pane.add(timestampPanel,BorderLayout.SOUTH);
 
         pane.setBounds(0, 0, 280, 120);
         layeredPane.add(pane, JLayeredPane.DEFAULT_LAYER);
@@ -169,7 +186,30 @@ public class User extends JFrame {
         pane.putClientProperty(FlatClientProperties.STYLE, "arc:16;background:#ffffff;border: 0,0,0,0,#fbbf23;");
         JLabel title = new JLabel("+");
         pane.add(title);
+            
         
+        MouseAdapter hoverListener = new MouseAdapter() {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            System.out.println("Create Board clicked:");
+
+            
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            pane.setBackground(CusColor.hexToColorObject("#f3f4f6")); 
+            Board a = new Board("ez","Dr. Taravichet","😬","Green");
+            Add(a);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            pane.setBackground(Color.WHITE);
+        }
+    };
+        pane.addMouseListener(hoverListener);
         title.setFont(new Font("Inter",Font.PLAIN,48));
         return pane;
     }

@@ -1,7 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+package Todolist.Tag_Manage;
+
+
 
 import Todolist.Priority_Manage.CusColor;
 import com.formdev.flatlaf.*;
@@ -24,7 +23,6 @@ public class Tag extends JPanel{
         text.setFont(new Font("Inter",Font.BOLD,12));
         bg.setBackground(CusColor.hexToColorObject(this.color.labelColor));
         bg.add(text);
-        putClientProperty(FlatClientProperties.STYLE, "arc:999;");
         bg.putClientProperty(FlatClientProperties.STYLE, "arc:999;");
         add(bg);
     }

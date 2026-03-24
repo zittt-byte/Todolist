@@ -1,66 +1,67 @@
-package Board;
+package Todolist.Board;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 import Todolist.Priority_Manage.CusColor;
-import com.formdev.flatlaf.*;
+import com.formdev.flatlaf.FlatClientProperties;
+import component.RoundedTopPanel;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.time.*;
+import java.awt.datatransfer.*;
+import java.awt.dnd.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
 /**
  *
  * @Kanin 68070224
  */
 public class Column extends JPanel implements ActionListener {
-    private final String title;
-    private final String color;
-    private int count = 0;
-    private ArrayList<Task> contains;
-    
-    
+    public final String title;
+    public final CusColor color;
+    public int count = 0;
+    public Board board;
+    private final String uuid = UUID.randomUUID().toString();
+
     public JLabel count_label,title_label;
     public JButton add_button;
     public JPanel body;
 
     
     
-    public Column(String name,String color){
-        
-        this.title = name;this.color = color;
+    public Column(String name,String color,Board board){
+        this.board = board;
+        this.title = name;this.color = CusColor.colorFromString(color);
         this.setLayout(new BorderLayout());
         
         
         // Header
         
-        JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
-//        this.putClientProperty( FlatClientProperties.STYLE,Config.cfgGroup(this.color));
+        RoundedTopPanel header = new RoundedTopPanel(8);
+        header.setLayout(new FlowLayout(FlowLayout.LEFT));
         title_label = new JLabel(this.title);
         title_label.setFont(new Font("Inter",4,12));
         count_label = new JLabel(String.valueOf(count));
         count_label.setFont(new Font("Inter",4,16));
-//        title_label.putClientProperty(FlatClientProperties.STYLE,CusColor.colorFromString(color).labelColor);
-//        header.putClientProperty( FlatClientProperties.STYLE,CusColor.colorFromString(color).inTextColor);
-        header.add(title_label);header.add(count_label);
+        JPanel bg = new JPanel();
+        bg.putClientProperty( FlatClientProperties.STYLE,"border: 0,0,0,0,"+this.color.borderColer+",1,999;background:"+this.color.labelColor);
+        bg.add(title_label);
+        title_label.putClientProperty(FlatClientProperties.STYLE,"foreground:"+this.color.textColor);
+        header.putClientProperty( FlatClientProperties.STYLE,"background:"+this.color.labelColor);
+        header.add(bg);header.add(count_label);
         header.setMaximumSize(new Dimension(10000,50));
-        header.setBackground(new Color(255,0,0));
         
         
         // Body
         body = new JPanel(); 
         body.setLayout(new BoxLayout(body,BoxLayout.Y_AXIS));
-        body.setBackground(new Color(255,0,255));
+        body.setBackground(new Color(255,255,255));
         
         
         
         // Button
         
         add_button = new JButton("+ New Task");
-//        add_button.putClientProperty(FlatClientProperties.STYLE,Config.cfgButton(this.color));
+        add_button.putClientProperty(FlatClientProperties.STYLE,"background: " + this.color.labelColor+";arc:20;foreground: "+this.color.inTextColor+";pressedBackground:#D9D7D3;borderColor:" + this.color.borderColer);
         add_button.setFocusable(false);
         add_button.setMaximumSize(new Dimension(500000, 50)); 
         add_button.setPreferredSize(new Dimension(0, 50));
@@ -75,6 +76,7 @@ public class Column extends JPanel implements ActionListener {
         footer.setMinimumSize(new Dimension(0, 50)); 
         footer.setMaximumSize(new Dimension(500000, 50)); 
         footer.setLayout(new BoxLayout(footer,BoxLayout.X_AXIS));
+        footer.putClientProperty(FlatClientProperties.STYLE,"background:"+this.color.labelColor+";;border: 4,4,4,4,,,8");
         
         footer.add(add_button);
         body.add(footer);
@@ -83,9 +85,36 @@ public class Column extends JPanel implements ActionListener {
         ////
         
         
-        
         this.add(header,BorderLayout.NORTH);
         this.add(body,BorderLayout.CENTER);
+        
+        new DropTarget(this, new DropTargetAdapter() {
+        @Override
+        public void drop(DropTargetDropEvent dtde) {
+            try {
+                if (dtde.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                    dtde.acceptDrop(DnDConstants.ACTION_COPY);
+                    Transferable t = dtde.getTransferable();
+                    String data = (String) t.getTransferData(DataFlavor.stringFlavor);
+                    
+                    for (int i = 0;i<board.getContains().size();i++) {
+                        if (board.getContains().get(i).uuid.equals(uuid)) {
+                            board.updateTask(data,i);
+                            break;
+                        }
+                    }
+                    System.out.println(title);
+                    dtde.dropComplete(true);
+                } else {
+                    dtde.rejectDrop();
+                }
+            } catch (UnsupportedFlavorException e) {
+                dtde.rejectDrop();
+            } catch (IOException ex) {
+                System.out.println("ok");
+            }
+        }
+    });
     }
     
     public void updateUi(){
@@ -94,17 +123,16 @@ public class Column extends JPanel implements ActionListener {
         body.repaint();
     }
     
-    public int addTask(Task task){
+    public int columnAddTask(Task task){
         count++;
-        contains.add(task);
-        body.add(task,body.getComponentCount() - 1);
+        task.setBackground(CusColor.hexToColorObject(color.labelColor));
+        body.add(task,count - 1);
         updateUi();
         return 0;
     }
     
     public int removeTask(Task task){
         count--;
-        contains.remove(task);
         body.remove(task);
         updateUi();
         return 0;
@@ -113,7 +141,14 @@ public class Column extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("+ New Task")) {
-        }
+            TaskInternalFrame a = new TaskInternalFrame(this.board,this);
+            JDesktopPane DesktopPane = new JDesktopPane();
+            JFrame ff = new JFrame();
+            DesktopPane.add(a);
+            a.setVisible(true);
+            ff.getContentPane().add(DesktopPane, BorderLayout.CENTER);
+            ff.setVisible(true);
+                    }
     }
 
 

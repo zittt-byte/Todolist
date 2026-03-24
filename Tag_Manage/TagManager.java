@@ -1,13 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+package Todolist.Tag_Manage;
+
 
 /**
  *
  * @author bank ratchanon
  */
 
+import Todolist.Board.Board;
+import Todolist.Priority_Manage.CusColor;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -21,10 +21,12 @@ public class TagManager implements ActionListener{
     private JTable table;
     private JButton btnAdd , btnRemove , btnModify;
     private ArrayList<Tag> tags = new ArrayList<>();
+    private Board board;
 
 
     
-    public TagManager(){
+    public TagManager(Board board){
+        this.board = board;
         j = new JFrame("Tag Manage");
         j.setLayout(new BorderLayout());
         j.setSize(500,400);
@@ -80,8 +82,9 @@ public class TagManager implements ActionListener{
         dialog.setVisible(true);
         Object[] newData = dialog.getData();
         if (newData != null) {
-            Tag tag = new Tag((String) newData[0], CusColor.colorFromDropdown( (String)newData[1] ));
+            Tag tag = new Tag((String) newData[0], CusColor.colorFromString((String)newData[1] ));
             tags.add(tag);
+            board.addTag(tag);
             model.addRow(new Object[]{tag.getName(), tag.getColor()});
         }
     }
@@ -94,6 +97,7 @@ public class TagManager implements ActionListener{
                     "Warning",
                     JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
+                board.removeTag(selectedRow);
                 tags.remove(selectedRow);
                 model.removeRow(selectedRow);
             }
@@ -113,10 +117,12 @@ public class TagManager implements ActionListener{
 
             Object[] newData = dialog.getData();
             if (newData != null) {
-                existing.setName((String) newData[0]);
-                existing.setColor(CusColor.colorFromDropdown( (String)newData[1] ));         
+                this.board.modifyTag(selectedRow, (String)newData[0], CusColor.colorFromString((String)newData[1]));
+                existing.setName((String)newData[0]);
+                existing.setColor(CusColor.colorFromString((String)newData[1] ));
                 model.setValueAt(existing.getName(), selectedRow, 0);
                 model.setValueAt(existing.getColor(), selectedRow, 1);
+                
             }
         } else {
             JOptionPane.showMessageDialog(j, "Please select one!");
@@ -134,9 +140,5 @@ public class TagManager implements ActionListener{
         else if (e.getSource().equals(btnModify)){
             Modify();
         }
-    }
-    
-    public static void main(String[] args) {
-        new TagManager();
     }
 }

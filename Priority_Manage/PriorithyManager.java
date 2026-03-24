@@ -137,6 +137,7 @@ public class PriorithyManager implements ActionListener{
             Modify();
         }
     }
+   
     
     public static void main(String[] args) {
         new PriorithyManager();

@@ -45,7 +45,6 @@ public class CardFrame extends JInternalFrame {
         JPanel panel = new JPanel();
         panel.setBackground(Color.white);
         panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-        final String TextFieldProperty = "arc:20;focusWidth:0;innerFocusWidth:0;";
         
         JTextField txtUser = new ComTextField("Username",new ImageIcon(getClass().getResource("/resources/mail.png")));
         JPasswordField txtPin = new ComPasswordField("PIN",new ImageIcon(getClass().getResource("/resources/lock.png")));
