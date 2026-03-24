@@ -1,9 +1,7 @@
 package Todolist.Board;
 
 import Todolist.Priority_Manage.CusColor;
-import Todolist.Priority_Manage.Priority;
 import Todolist.Tag_Manage.Tag;
-import java.beans.*;
 import java.util.*;
 import java.util.UUID;
 import java.time.LocalDate;

@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Todolist.Board;
 
 import Todolist.Priority_Manage.*;
@@ -38,9 +42,6 @@ public class TaskView extends JPanel implements ActionListener {
         ComBoxGroup body = new ComBoxGroup();
         
         add(body);
-        
-        
-        
     }
     
     

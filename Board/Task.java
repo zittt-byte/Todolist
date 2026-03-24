@@ -5,7 +5,6 @@ import Todolist.Priority_Manage.CusColor;
 import Todolist.Priority_Manage.Priority;
 import Todolist.Tag_Manage.Tag;
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
@@ -221,11 +220,6 @@ public class Task extends JPanel {
         wrapper.add(bg);
         wrapper.setBackground(Color.white);
         return wrapper;
-    }
-    
-    @Override
-    public Dimension getMaximumSize() {
-        return new Dimension(Integer.MAX_VALUE, getPreferredSize().height - 10);
     }
 
     public int getStatus() {
