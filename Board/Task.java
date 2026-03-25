@@ -198,7 +198,7 @@ public class Task extends JPanel {
         
         add(layeredPane);
         
-        ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, dge -> {
+        ds.createDefaultDragGestureRecognizer(wrapper, DnDConstants.ACTION_MOVE, dge -> {
             Transferable t = new StringSelection(uuid);
             dge.startDrag(DragSource.DefaultMoveDrop, t);
         });
