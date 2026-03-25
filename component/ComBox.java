@@ -1,26 +1,30 @@
-package component;
+package Todolist.component;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.*;
 import javax.swing.*;
+import static resources.Etc.boxFiller;
 
 
-public class ComBox extends JPanel {
-    private JPanel pane,content;
-    private JLabel title;
+public abstract class ComBox extends JPanel {
+    public JPanel pane,content;
+    private final JLabel title;
     
 
-    public ComBox(String titleText,JPanel panel) {
+    public ComBox(String titleText) {
+        setLayout(new BorderLayout());
+        
         pane = new JPanel();
         pane.setLayout(new BoxLayout(pane,BoxLayout.Y_AXIS));
+        pane.add(boxFiller(10,0));
         title = new JLabel(titleText);
+        title.setAlignmentX(Component.LEFT_ALIGNMENT);
         pane.setPreferredSize(new Dimension(280, 80));
         title.setFont(new Font("Inter", Font.PLAIN, 16));
         pane.putClientProperty(FlatClientProperties.STYLE, "background:#ffffff;border: 6,6,6,6,#d1d1d1,1,16;");
         putClientProperty(FlatClientProperties.STYLE, ";background:#ffffff");
         pane.add(title);
-        pane.add(panel);
-        add(pane);
+        add(pane, BorderLayout.CENTER);
     }
     public static void main(String[] args) {
         FlatLightLaf.setup();

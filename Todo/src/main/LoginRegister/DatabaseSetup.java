@@ -1,4 +1,4 @@
-package Todolist.Todo.src.main.java;
+package Todolist.Todo.src.main.LoginRegister;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

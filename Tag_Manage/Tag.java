@@ -23,8 +23,9 @@ public class Tag extends JPanel{
         text.setFont(new Font("Inter",Font.BOLD,12));
         bg.setBackground(CusColor.hexToColorObject(this.color.labelColor));
         bg.add(text);
-        bg.putClientProperty(FlatClientProperties.STYLE, "arc:999;");
+        bg.putClientProperty(FlatClientProperties.STYLE, "border:0,2,0,2,,,999;");
         add(bg);
+        setBackground(Color.WHITE);
     }
 
     public Tag(String name, String color) {

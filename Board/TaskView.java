@@ -4,6 +4,7 @@
  */
 package Todolist.Board;
 
+import Todolist.component.ComBoxGroup;
 import Todolist.Priority_Manage.*;
 import Todolist.Tag_Manage.Tag;
 import com.formdev.flatlaf.FlatLightLaf;

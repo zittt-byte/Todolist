@@ -1,6 +1,6 @@
-package Todolist.Todo.src.main.java;
+package Todolist.Todo.src.main.LoginRegister;
 
-import com.formdev.flatlaf.FlatClientProperties;
+import Todolist.Todo.src.main.java.*;
 import component.*;
 import javax.swing.*;
 import java.awt.*;
