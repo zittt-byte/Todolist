@@ -1,3 +1,5 @@
+package Todolist.ProgressBar;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -7,6 +9,8 @@
  *
  * @author apimookweerakunwattana
  */
+import Todolist.Priority_Manage.CusColor;
+import Todolist.Priority_Manage.Priority;
 import java.awt.*;
 import javax.swing.*;
 
@@ -23,10 +27,10 @@ public class TaskProgressBar {
         task = new JLabel("Task Priorities");ur = new JLabel("Urgent/Critical");hi = new JLabel("High Priority");
         mid = new JLabel("Medium Priority");lo = new JLabel("Low Priority");
         
-        pbur = createBar(0,priority.getColor());
-        pbhi = createBar(0,priority.getColor());
-        pbmid = createBar(0,priority.getColor());
-        pblo = createBar(0,priority.getColor());
+        pbur = createBar(0, CusColor.hexToColorObject(Priority.priority.get(3).getColor().textColor)); // Urgent
+        pbhi = createBar(0, CusColor.hexToColorObject(Priority.priority.get(2).getColor().textColor)); // High
+        pbmid = createBar(0, CusColor.hexToColorObject(Priority.priority.get(1).getColor().textColor)); // Medium
+        pblo = createBar(0, CusColor.hexToColorObject(Priority.priority.get(0).getColor().textColor)); // Low
         
         nur = new JLabel("0");nhi = new JLabel("0");nmid = new JLabel("0");nlo = new JLabel("0");
         

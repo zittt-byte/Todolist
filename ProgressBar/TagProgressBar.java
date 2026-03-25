@@ -1,5 +1,7 @@
-import Tag.Tag;
+package Todolist.ProgressBar;
+
 import Todolist.Priority_Manage.CusColor;
+import Todolist.Tag_Manage.Tag;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicProgressBarUI;
