@@ -282,6 +282,17 @@ public class Task extends JPanel {
         return uuid;
     }
     
+    @Override
+    public Dimension getMaximumSize() {
+        return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);
+    }
+     
+    @Override
+    public Dimension getPreferredSize() {
+        Dimension d = super.getPreferredSize();
+        return new Dimension(d.width, d.height);
+    }
+    
     
 }
 
