@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
  *
  * @author User
  */
-public class Person {
+public class Person implements java.io.Serializable {
     private String name,role,mail;
     private ImageIcon icon;
 

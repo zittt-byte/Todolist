@@ -7,7 +7,7 @@ import java.awt.Color;
  *
  * @Kanin
  */
-public class CusColor {
+public class CusColor implements java.io.Serializable {
     public String labelColor,borderColer,inTextColor,textColor;
     public static final CusColor DEFAULT = new CusColor("#ffffff","#ffffff","#000000","#000000");
     public static final CusColor GRAY = new CusColor("#F0EFED","#D9D7D3","#2F2E2D","#7D7A75");

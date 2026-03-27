@@ -10,7 +10,7 @@ import javax.swing.*;
  *
  * @Kanin
  */
-public class Tag extends JPanel{
+public class Tag extends JPanel implements java.io.Serializable{
     private String name;
     private CusColor color;
 
@@ -30,6 +30,10 @@ public class Tag extends JPanel{
 
     public Tag(String name, String color) {
         this(name,CusColor.colorFromString(color));
+    }
+    
+    public Tag copy(){
+        return new Tag(this.name,this.color);
     }
 
     public String getName() {

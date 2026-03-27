@@ -1,3 +1,8 @@
+package Todolist.PersonManger_src;
+
+
+
+import Todolist.Board.Board;
 import Todolist.PersonManger_src.Person;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -18,12 +23,16 @@ public class PersonManager {
     private JButton add;
     private JButton remove;
     private JButton modify;
+    private Board board;
  
-    private List<Person> people = new ArrayList<>();
+    private List<Person> people;
  
-    public PersonManager() {
+    public PersonManager(Board board) {
+        
+        this.board = board;
+        people = this.board.getPerson_contain();
         fr = new JFrame("Person Manager");
-        fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        fr.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         fr.setSize(640, 400);
         fr.setLocationRelativeTo(null);
  
@@ -92,6 +101,10 @@ public class PersonManager {
         table.getColumnModel().getColumn(0).setPreferredWidth(40);
         table.getColumnModel().getColumn(1).setPreferredWidth(160);
         table.getColumnModel().getColumn(2).setPreferredWidth(160);
+        
+        for (Person p : people) {
+                tableModel.addRow(new Object[]{p.getIcon(), p.getName(), p.getRole()});
+        }
     }
  
     private void openAddDialog() {
@@ -120,6 +133,7 @@ public class PersonManager {
         int answer = JOptionPane.showConfirmDialog(fr, "Remove selected person?", "Confirm", JOptionPane.YES_NO_OPTION);
         if (answer == JOptionPane.YES_OPTION) {
             tableModel.removeRow(row);
+            this.board.removePerson(row);
             people.remove(row);
         }
     }
@@ -149,15 +163,12 @@ public class PersonManager {
             p.setRole(dialog.getPersonRole());
             p.setMail(dialog.getPersonMail());
             p.setIcon(dialog.getSelectedIcon());
+            this.board.modifyPerson(row,p);
  
             tableModel.setValueAt(p.getIcon(), row, 0);
             tableModel.setValueAt(p.getName(), row, 1);
             tableModel.setValueAt(p.getRole(), row, 2);
         }
     }
- 
-    public static void main(String[] args) {
-        FlatLightLaf.setup();
-        new PersonManager();
-    }
+
 }

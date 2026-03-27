@@ -1,7 +1,10 @@
 package Todolist.Board;
 
-import Todolist.PersonManger_src.Person;
+import Todolist.PersonManger_src.*;
+import Todolist.Priority_Manage.CusColor;
+import static Todolist.Priority_Manage.CusColor.hexToColorObject;
 import Todolist.Priority_Manage.Priority;
+
 import Todolist.Tag_Manage.*;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.*;
@@ -40,7 +43,13 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
         panelbar = new BoardBarPanel(this);
         this.add(pane,BorderLayout.CENTER);
         this.add((BoardBarPanel)panelbar,BorderLayout.NORTH);
+        
+        
+        ((BoardBarPanel)panelbar).left.setBackground(CusColor.hexToColorObject(this.board.getBanner().labelColor));
+        ((BoardBarPanel)panelbar).center.setBackground(CusColor.hexToColorObject(this.board.getBanner().labelColor));
+        ((BoardBarPanel)panelbar).right.setBackground(CusColor.hexToColorObject(this.board.getBanner().labelColor));
     }
+    
      
     private void attachCloseButton(Task task) {
        JButton closeButton = new JButton("✕");
@@ -65,9 +74,7 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
 
            @Override
            public void mouseExited(MouseEvent e) {
-               Point p = SwingUtilities.convertPoint(
-        e.getComponent(), e.getPoint(), task.getWrapper()
-               );
+               Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), task.getWrapper());
                if (!task.getWrapper().contains(p)) {
                    closeButton.setVisible(false);
                }
@@ -97,9 +104,9 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
         switch (panelbar.getSort()) {
             case "Name" -> ListClone.sort(Comparator.comparing(Task::getTitle));
             case "Age" -> ListClone.sort(Comparator.comparing(Task::getCreatedAt));
-            case "Due Time" -> ListClone.sort(Comparator.comparing(Task::getTitle));
-            case "Priority" -> ListClone.sort(Comparator.comparing(Task::getTitle));
-            case "Person" -> ListClone.sort(Comparator.comparing(Task::getTitle));
+            case "Due Time" -> ListClone.sort(Comparator.comparing(Task::getDeadline));
+            case "Priority" -> ListClone.sort(Comparator.comparing(Task::getPriorityOrder));
+            case "Person" -> ListClone.sort(Comparator.comparing(Task::getAssigneeName));
         }
         
         for (Task task : ListClone) {
@@ -108,6 +115,10 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
                 attachCloseButton(task);
             }
         }
+    }
+    
+    public void setBar(Bar bar) {
+        panelbar = bar;
     }
     
     public boolean isSameInstance(ArrayList<?> a, ArrayList<?> b) {
@@ -158,16 +169,16 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
             render();
             
         } else if (source.equals(BarPanel.eyeButton)) {
-            
-            
+            JPopupMenu popup = ((BoardBarPanel)panelbar).tagBox();
+            popup.show(BarPanel.eyeButton, 0, BarPanel.eyeButton.getHeight());
         } else if (source.equals(BarPanel.SwapButton)) {
             JPopupMenu popup = ((BoardBarPanel)panelbar).priorityBox();
             popup.show(BarPanel.SwapButton, 0, BarPanel.SwapButton.getHeight());
         } else if (source.equals(BarPanel.MagnifierButton)) {
             JPopupMenu popup = ((BoardBarPanel)panelbar).SortBox();
             popup.show(BarPanel.SwapButton, 0, BarPanel.SwapButton.getHeight());
-            
         } else if (source.equals(BarPanel.prepleButton)) {
+            new PersonManager(this.board);
             
         } else if (source.equals(BarPanel.settinButton)) {
             new TagManager(this.board);
@@ -176,6 +187,6 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
             
         }
     }
-    
+
 
 }

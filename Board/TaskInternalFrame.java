@@ -1,5 +1,6 @@
 package Todolist.Board;
 
+import Todolist.PersonManger_src.Person;
 import Todolist.Priority_Manage.CusColor;
 import Todolist.Priority_Manage.Priority;
 import Todolist.Tag_Manage.Tag;
@@ -52,6 +53,7 @@ public class TaskInternalFrame extends JInternalFrame {
     private JTextField           iconField;
     private JComboBox<Priority>  priorityCombo;
     private JComboBox<Column>    statusCombo;
+    private JComboBox<Person>    personCombo;
     private JSpinner             deadlineSpinner;
     private JLabel               statusBar;
     private MultiSelectDropdown  tagsDropdown;
@@ -152,6 +154,8 @@ public class TaskInternalFrame extends JInternalFrame {
         ));
         form.add(spacer(10));
         form.add(buildRow("Tags", buildTagsDropdown()));
+        form.add(spacer(10));
+        form.add(buildRow("Assignee", buildPersonCombo()));
 
         JScrollPane scroll = new JScrollPane(form);
         scroll.setBorder(BorderFactory.createEmptyBorder());
@@ -256,6 +260,24 @@ public class TaskInternalFrame extends JInternalFrame {
         return tagsDropdown;
     }
 
+    /**
+     * Builds the Assignee dropdown, populated from Board.getPerson_contain().
+     * A sentinel "— Unassigned —" entry is always prepended so the field is optional.
+     */
+    private JComboBox<Person> buildPersonCombo() {
+        // Sentinel: null signals "no assignee"
+        personCombo = new JComboBox<>();
+        personCombo.addItem(null);                                    // "— Unassigned —"
+        for (Person p : board.getPerson_contain()) personCombo.addItem(p);
+
+        personCombo.setBackground(CARD);
+        personCombo.setForeground(TEXT);
+        personCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        personCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
+        personCombo.setRenderer(new PersonRenderer());
+        return personCombo;
+    }
+
     // ── Footer ────────────────────────────────────────────────
     private JPanel buildFooter() {
         JPanel p = new JPanel(new BorderLayout(10, 0));
@@ -320,10 +342,12 @@ public class TaskInternalFrame extends JInternalFrame {
         System.out.print("Tags     : ");
         tags.forEach(t -> System.out.print("[" + t.getName() + "/" + t.getColor() + "] "));
         System.out.println("");
-        Task a = new Task(title,desc,icon,priority,status,null,tags,deadline);
+        Person assignee = (Person) personCombo.getSelectedItem();
+
+        Task a = new Task(title,desc,icon,priority,status,assignee,tags,deadline);
         this.board.addTask(a);
-        System.out.println(status);
-        System.out.println(a.getStatus());
+        
+
         
         System.out.println();
     }
@@ -336,6 +360,7 @@ public class TaskInternalFrame extends JInternalFrame {
         statusCombo.setSelectedIndex(0);
         tagsDropdown.setSelected(new ArrayList<>());
         tags.clear();
+        personCombo.setSelectedIndex(0);
         flash(statusBar, "Form cleared.", MUTED);
     }
 
@@ -450,6 +475,82 @@ public class TaskInternalFrame extends JInternalFrame {
                 : list.getBackground());
             wrapper.setOpaque(true);
             return wrapper;
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────
+    //  Person combo renderer
+    // ──────────────────────────────────────────────────────────
+    class PersonRenderer extends DefaultListCellRenderer {
+        private static final int AVATAR_SIZE = 26;
+
+        @Override
+        public Component getListCellRendererComponent(
+                JList<?> list, Object value, int index,
+                boolean isSelected, boolean cellHasFocus) {
+
+            JPanel row = new JPanel(new BorderLayout(8, 0));
+            row.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+            row.setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
+            row.setOpaque(true);
+
+            if (value == null) {
+                JLabel lbl = new JLabel("— Unassigned —");
+                lbl.setFont(new Font("Segoe UI", Font.ITALIC, 13));
+                lbl.setForeground(MUTED);
+                row.add(lbl, BorderLayout.CENTER);
+                return row;
+            }
+
+            Person p = (Person) value;
+
+            // Avatar circle (icon if present, initials fallback)
+            JLabel avatar = new JLabel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(ACCENT);
+                    g2.fillOval(0, 0, AVATAR_SIZE, AVATAR_SIZE);
+                    if (p.getIcon() != null && p.getIcon().getIconWidth() > 0) {
+                        Image img = p.getIcon().getImage().getScaledInstance(AVATAR_SIZE, AVATAR_SIZE, Image.SCALE_SMOOTH);
+                        g2.setClip(new java.awt.geom.Ellipse2D.Float(0, 0, AVATAR_SIZE, AVATAR_SIZE));
+                        g2.drawImage(img, 0, 0, null);
+                    } else {
+                        String initials = p.getName().trim().isEmpty() ? "?"
+                            : String.valueOf(p.getName().charAt(0)).toUpperCase();
+                        g2.setColor(Color.WHITE);
+                        g2.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
+                        FontMetrics fm = g2.getFontMetrics();
+                        int tx = (AVATAR_SIZE - fm.stringWidth(initials)) / 2;
+                        int ty = (AVATAR_SIZE - fm.getHeight()) / 2 + fm.getAscent();
+                        g2.drawString(initials, tx, ty);
+                    }
+                    g2.dispose();
+                }
+            };
+            avatar.setPreferredSize(new Dimension(AVATAR_SIZE, AVATAR_SIZE));
+            avatar.setOpaque(false);
+
+            // Name + role stacked
+            JPanel info = new JPanel();
+            info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+            info.setOpaque(false);
+
+            JLabel nameLabel = new JLabel(p.getName());
+            nameLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 13));
+            nameLabel.setForeground(TEXT);
+
+            JLabel roleLabel = new JLabel(p.getRole() != null ? p.getRole() : "");
+            roleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+            roleLabel.setForeground(MUTED);
+
+            info.add(nameLabel);
+            info.add(roleLabel);
+
+            row.add(avatar, BorderLayout.WEST);
+            row.add(info,   BorderLayout.CENTER);
+            return row;
         }
     }
 }

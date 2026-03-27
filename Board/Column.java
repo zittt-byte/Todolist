@@ -15,7 +15,7 @@ import java.util.*;
  *
  * @Kanin 68070224
  */
-public class Column extends JPanel implements ActionListener {
+public class Column extends JPanel implements ActionListener,java.io.Serializable {
     public final String title;
     public final CusColor color;
     public int count = 0;

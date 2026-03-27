@@ -15,7 +15,7 @@ import javax.swing.event.*;
  *
  * @Kanin
  */
-public class Board implements ActionListener {
+public class Board implements ActionListener,java.io.Serializable {
     private String name,desc,icon;
     private final String uuid;
     private CusColor Banner; 
@@ -140,6 +140,31 @@ public class Board implements ActionListener {
 
     public void setTag_contain(ArrayList<Tag> Tag_contain) {
         this.Tag_contain = Tag_contain;
+    }
+
+    public ArrayList<Person> getPerson_contain() {
+        return Person_contain;
+    }
+    
+    public void addPerson(Person person) {
+        Person_contain.add(person);
+        System.out.println(Person_contain);
+    }
+    
+    public void removePerson(int index) {
+        Person_contain.remove(index);
+    }
+    
+    public void removePerson(Person person) {
+        Person_contain.remove(person);
+    }
+    
+    public void modifyPerson(int index,Person New) {
+        Person a = Person_contain.get(index);
+        a.setName(New.getName());
+        a.setMail(New.getMail());
+        a.setRole(New.getRole());
+        a.setIcon(New.getIcon());
     }
     
     public void addTag(Tag tag) {

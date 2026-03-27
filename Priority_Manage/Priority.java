@@ -13,7 +13,7 @@ import javax.swing.*;
  *
  * @Kanin
  */
-public class Priority extends JPanel{
+public class Priority extends JPanel implements java.io.Serializable {
     private String name;
     private CusColor color;
     private int order;

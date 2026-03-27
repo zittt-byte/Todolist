@@ -22,7 +22,7 @@ import javax.swing.*;
  *
  * @author User
  */
-public class Task extends JPanel {
+public class Task extends JPanel implements java.io.Serializable {
     private int status;
     private ArrayList<Tag> Tag;
     private String title,desc,icon;
@@ -50,12 +50,12 @@ public class Task extends JPanel {
         this.status   = status;
         this.Tag      = Tag;
         this.Deadline = Deadline;
- 
+
         DragSource ds = DragSource.getDefaultDragSource();
- 
+
         wrapper = new JPanel() {
             private boolean hovered = false;
- 
+
             {
                 addMouseListener(new java.awt.event.MouseAdapter() {
                     @Override
@@ -63,7 +63,7 @@ public class Task extends JPanel {
                         hovered = true;
                         repaint();
                     }
- 
+
                     @Override
                     public void mouseExited(java.awt.event.MouseEvent e) {
                         java.awt.Component c = e.getComponent();
@@ -76,89 +76,92 @@ public class Task extends JPanel {
                 });
             }
         };
- 
-        wrapper.setLayout(new GridBagLayout());
+
+        wrapper.setLayout(new BorderLayout());
         wrapper.setOpaque(false);
- 
-        GridBagConstraints gbc = new GridBagConstraints();
- 
+
         JPanel tagcollection = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 2));
+        tagcollection.setOpaque(false);
+        tagcollection.setAlignmentX(Component.LEFT_ALIGNMENT);
         for (Tag tag : Tag) {
-            tagcollection.add(tag);
+            Tag holder = tag.copy();
+            tagcollection.add(holder);
             tag.setBorder(null);
         }
- 
+
         JLabel emojiLabel = new JLabel(icon);
         emojiLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 28));
- 
-        JLabel titleLabel = new JLabel("<html>" + title + "</html>");
-        titleLabel.setFont(new Font("Georgia", Font.BOLD, 24));
-        titleLabel.setForeground(new Color(30, 30, 30));
- 
-        gbc.gridx     = 0;
-        gbc.gridy     = 0;
-        gbc.gridwidth = 1;
-        gbc.anchor    = GridBagConstraints.WEST;
-        gbc.fill      = GridBagConstraints.NONE;
-        gbc.weightx   = 0;
-        gbc.insets    = new Insets(18, 20, 4, 6);
-        wrapper.add(emojiLabel, gbc);
- 
-        gbc.gridx     = 1;
-        gbc.gridy     = 0;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.anchor    = GridBagConstraints.WEST;
-        gbc.fill      = GridBagConstraints.HORIZONTAL;
-        gbc.weightx   = 1.0;
-        gbc.insets    = new Insets(18, 0, 4, 20);
-        wrapper.add(titleLabel, gbc);
- 
-        Priority difficultyBadge = priority.copy();
- 
-        JPanel timerBadge = this.timepanel();
- 
-        JPanel badgeRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
-        badgeRow.setOpaque(false);
-        badgeRow.add(difficultyBadge);
-        badgeRow.add(tagcollection);
- 
-        gbc.gridx     = 0;
-        gbc.gridy     = 1;
-        gbc.gridwidth = 1;
-        gbc.anchor    = GridBagConstraints.WEST;
-        gbc.fill      = GridBagConstraints.NONE;
-        gbc.weightx   = 0;
-        gbc.insets    = new Insets(4, 20, 18, 6);
-        wrapper.add(badgeRow, gbc);
- 
-        gbc.gridx   = 1;
-        gbc.gridy   = 1;
-        gbc.weightx = 1.0;
-        gbc.fill    = GridBagConstraints.HORIZONTAL;
-        gbc.insets  = new Insets(0, 0, 0, 0);
-        wrapper.add(Box.createHorizontalGlue(), gbc);
- 
-        gbc.gridx   = 2;
-        gbc.gridy   = 1;
-        gbc.weightx = 0;
-        gbc.fill    = GridBagConstraints.NONE;
-        gbc.anchor  = GridBagConstraints.EAST;
-        gbc.insets  = new Insets(4, 6, 18, 20);
-        
 
+        JLabel titleLabel = new JLabel("<html>" + title + "</html>");
+        titleLabel.setFont(new Font("Georgia", Font.BOLD, 20));
+        titleLabel.setForeground(new Color(30, 30, 30));
+
+        JPanel titleRow = new JPanel(new GridBagLayout());
+        titleRow.setOpaque(false);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.gridx   = 0;
+        gbc.gridy   = 0;
+        gbc.anchor  = GridBagConstraints.NORTHWEST;
+        gbc.fill    = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.insets  = new Insets(18, 20, 4, 6);
+        titleRow.add(emojiLabel, gbc);
+
+        gbc.gridx   = 1;
+        gbc.gridy   = 0;
+        gbc.anchor  = GridBagConstraints.NORTHWEST;
+        gbc.fill    = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.weighty = 0;
+        gbc.insets  = new Insets(18, 0, 4, 20);
+        titleRow.add(titleLabel, gbc);
+
+        Priority difficultyBadge = priority.copy();
+        difficultyBadge.setAlignmentX(Component.LEFT_ALIGNMENT);
+        difficultyBadge.setMaximumSize(difficultyBadge.getPreferredSize());
+
+        tagcollection.setMaximumSize(tagcollection.getPreferredSize());
+
+        JPanel badgeRow = new JPanel();
+        badgeRow.setLayout(new BoxLayout(badgeRow, BoxLayout.Y_AXIS));
+        badgeRow.setOpaque(false);
+
+        if (!Tag.isEmpty()) {
+            badgeRow.add(tagcollection);
+            badgeRow.add(Box.createVerticalStrut(4));
+        }
+        badgeRow.add(difficultyBadge);
+
+        JPanel timerBadge = this.timepanel();
+
+        JPanel bottomRow = new JPanel(new BorderLayout());
+        bottomRow.setOpaque(false);
+        bottomRow.add(badgeRow, BorderLayout.WEST);
 
         Duration timeLeft = Duration.between(LocalDateTime.now(), this.Deadline);
         System.out.println(timeLeft.toMinutes());
-        if (!timeLeft.isNegative() && timeLeft.toMinutes() <= 30){
-        wrapper.add(timerBadge, gbc);
+        if (!timeLeft.isNegative() && timeLeft.toMinutes() <= 30) {
+            bottomRow.add(timerBadge, BorderLayout.EAST);
         }
+
+        JPanel bottomWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        bottomWrapper.setOpaque(false);
+        bottomWrapper.setBorder(BorderFactory.createEmptyBorder(0, 20, 18, 20));
+        bottomWrapper.add(bottomRow);
+
+        wrapper.add(titleRow, BorderLayout.NORTH);
+        wrapper.add(bottomWrapper, BorderLayout.SOUTH);
+
         wrapper.putClientProperty(FlatClientProperties.STYLE, "border: 4,4,4,4,#d1d1d1,1,12");
- 
+        wrapper.setBackground(Color.white);
+
         putClientProperty(FlatClientProperties.STYLE, "border: 4,4,4,4,#000000,1,12");
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        wrapper.setBackground(Color.white);
- 
+
         layeredPane = new JLayeredPane() {
             @Override
             public void doLayout() {
@@ -168,17 +171,16 @@ public class Task extends JPanel {
                     c.setBounds(0, 0, size.width, size.height);
                 }
             }
- 
+
             @Override
             public Dimension getPreferredSize() {
                 return wrapper.getPreferredSize();
             }
         };
- 
+
         layeredPane.add(wrapper, JLayeredPane.DEFAULT_LAYER);
- 
         add(layeredPane);
- 
+
         ds.createDefaultDragGestureRecognizer(wrapper, DnDConstants.ACTION_MOVE, dge -> {
             Transferable t = new StringSelection(uuid);
             dge.startDrag(DragSource.DefaultMoveDrop, t);
@@ -252,6 +254,10 @@ public class Task extends JPanel {
     public Priority getPriority() {
         return priority;
     }
+    
+    public int getPriorityOrder() {
+        return priority.getOrder();
+    }
 
     public void setPriority(Priority priority) {
         this.priority = priority;
@@ -287,6 +293,13 @@ public class Task extends JPanel {
 
     public Person getAssignee() {
         return assignee;
+    }
+    
+    public String getAssigneeName() {
+        if (assignee != null){
+            return assignee.getName();
+        }
+        return "ZZZZZZZZZNot Found";
     }
 
     public void setAssignee(Person assignee) {

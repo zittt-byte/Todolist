@@ -19,8 +19,9 @@ import javax.swing.*;
  *
  * @punnasin
  */
-public class BoardBarPanel extends JPanel implements Bar,ActionListener{
+public class BoardBarPanel extends BarPanel implements Bar,ActionListener{
     private final BoardView bv;
+    public JPanel footer;
     public JPanel toolbar = new JPanel(new BorderLayout());
     public JButton reverseButton = new JButton("↩");
     public JButton refreshButton = new JButton("↻");
@@ -30,13 +31,16 @@ public class BoardBarPanel extends JPanel implements Bar,ActionListener{
     public JButton prepleButton = new JButton("👤");
     public JButton settinButton = new JButton("⚙");
     public JButton burgerButton = new JButton("☰");
-    private JPanel PriorityGroup;
+    private JPanel TagGroup;
     private ArrayList<Priority> prioritylist = new ArrayList<>();
+    private ArrayList<Tag> taglist = new ArrayList<>();
+    private ArrayList<Person> personlist = new ArrayList<>();
     ButtonGroup SortGroup;
-    JPanel center,right,left;
+    public JPanel center,right,left;
     private String sort = "Age";
 
     public BoardBarPanel(BoardView bv) {
+        super("Kanin");
         this.bv = bv;
         left = new JPanel(new FlowLayout());
         left.add(reverseButton);
@@ -56,7 +60,7 @@ public class BoardBarPanel extends JPanel implements Bar,ActionListener{
         toolbar.add(left, BorderLayout.WEST);
         toolbar.add(center, BorderLayout.CENTER);
         toolbar.add(right, BorderLayout.EAST);
-        add(toolbar);
+        add(toolbar,BorderLayout.SOUTH);
         reverseButton.addActionListener(bv);
         refreshButton.addActionListener(bv);
         eyeButton.addActionListener(bv);
@@ -76,7 +80,7 @@ public class BoardBarPanel extends JPanel implements Bar,ActionListener{
         pane = new JPanel();
         pane.setLayout(new BorderLayout());
         JLabel l = new JLabel("Priority");
-        PriorityGroup = new JPanel(new GridLayout(this.bv.board.getPriority().size(), 1));
+        TagGroup = new JPanel(new GridLayout(this.bv.board.getPriority().size(), 1));
         pane.add(l, BorderLayout.NORTH);
         for (Priority pri : this.bv.board.getPriority()) {
             JCheckBox temp = new JCheckBox(pri.getName(), false);
@@ -84,12 +88,40 @@ public class BoardBarPanel extends JPanel implements Bar,ActionListener{
             temp.addActionListener(this);
             temp.putClientProperty("priority", pri);
             temp.putClientProperty("source", "Priority");
-            PriorityGroup.add(temp);
+            TagGroup.add(temp);
         }
-        pane.add(PriorityGroup, BorderLayout.CENTER);
+        pane.add(TagGroup, BorderLayout.CENTER);
         
-        for (Component c : PriorityGroup.getComponents()) {
+        for (Component c : TagGroup.getComponents()) {
                 if (prioritylist.contains((Priority)((JCheckBox)c).getClientProperty("priority"))) {
+                    ((JCheckBox)c).setSelected(true);
+                }
+            }
+
+        wrapper.add(pane);
+        return wrapper;
+    }
+    
+    public JPopupMenu tagBox() {
+        JPanel pane;
+        JPopupMenu wrapper = new JPopupMenu();
+        pane = new JPanel();
+        pane.setLayout(new BorderLayout());
+        JLabel l = new JLabel("Tag");
+        TagGroup = new JPanel(new GridLayout(this.bv.board.getTag_contain().size(), 1));
+        pane.add(l, BorderLayout.NORTH);
+        for (Tag tag : this.bv.board.getTag_contain()) {
+            JCheckBox temp = new JCheckBox(tag.getName(), false);
+            temp.setForeground(CusColor.hexToColorObject(tag.getColor().textColor));
+            temp.addActionListener(this);
+            temp.putClientProperty("Tag", tag);
+            temp.putClientProperty("source", "Tag");
+            TagGroup.add(temp);
+        }
+        pane.add(TagGroup, BorderLayout.CENTER);
+        
+        for (Component c : TagGroup.getComponents()) {
+                if (taglist.contains((Tag)((JCheckBox)c).getClientProperty("Tag"))) {
                     ((JCheckBox)c).setSelected(true);
                 }
             }
@@ -169,8 +201,7 @@ public class BoardBarPanel extends JPanel implements Bar,ActionListener{
 
     @Override
     public ArrayList<Tag> getTag() {
-        ArrayList<Tag> a = new ArrayList<>();
-        return a;
+        return taglist;
     }
     
     public String getSort() {
@@ -179,8 +210,7 @@ public class BoardBarPanel extends JPanel implements Bar,ActionListener{
 
     @Override
     public ArrayList<Person> getPerson() {
-        ArrayList<Person> a = new ArrayList<>();
-        return a;
+        return personlist;
     }
 
     @Override
@@ -197,11 +227,21 @@ public class BoardBarPanel extends JPanel implements Bar,ActionListener{
             } else {
                 prioritylist.remove((Priority)CheckBox.getClientProperty("priority"));
             }
+            this.bv.render();
         } else if (e.getSource() instanceof JRadioButton && ((JRadioButton)e.getSource()).getClientProperty("source").equals("sort")) {
             JRadioButton CheckBox = (JRadioButton)e.getSource();
             sort = CheckBox.getText();
-        }
-        this.bv.render();
+            this.bv.render();
+        } else if (e.getSource() instanceof JCheckBox && ((JCheckBox)e.getSource()).getClientProperty("source").equals("Tag")) {
+            JCheckBox CheckBox = (JCheckBox)e.getSource();
+            if (CheckBox.isSelected()) {
+                taglist.add((Tag)CheckBox.getClientProperty("Tag"));
+            } else {
+                taglist.remove((Tag)CheckBox.getClientProperty("Tag"));
+            }
+            this.bv.render();
+        
     }
     
+}
 }

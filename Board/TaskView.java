@@ -11,7 +11,7 @@ import resources.Etc;
  *
  * @Kanin
  */
-public class TaskView extends JPanel implements ActionListener {
+public class TaskView extends JPanel implements ActionListener,java.io.Serializable {
     private JLabel header,desc;
     private JPanel content;
     
@@ -36,7 +36,6 @@ public class TaskView extends JPanel implements ActionListener {
         
         add(body);
     }
-    
     
 
     @Override

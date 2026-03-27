@@ -16,7 +16,8 @@ import java.time.format.*;
  *
  * @Kanin
  */
-public class User extends JFrame {
+public class User extends JFrame implements java.io.Serializable {
+    public String name;
     public ArrayList<Board> Contains;
     public JPanel panel;
     
@@ -24,8 +25,6 @@ public class User extends JFrame {
         Contains = new ArrayList<Board>();
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER,10, 10));
         Board a = new Board("OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026","Dr. Taravichet","😬","Green");
-        Board b = new Board("DS&A","Dr. Taravichet","🤢","BLUE");
-        Board c = new Board("Stat and Prob","Dr. Sooksan","🤢","Red");
 
         panel.setPreferredSize(new Dimension(700,700));
         setSize(700,700);
@@ -33,8 +32,7 @@ public class User extends JFrame {
 
         
         this.add(panel);
-        
-        Add(a);Add(b);Add(c);
+        Add(a);
         setVisible(true);
         
     }
@@ -220,7 +218,6 @@ public class User extends JFrame {
         fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fr.add(b);
         fr.setVisible(true);
-        
         System.out.println("Board clicked: " + board.getUuid());
         setVisible(false);
     }
