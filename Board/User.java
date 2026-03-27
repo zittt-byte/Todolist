@@ -12,6 +12,9 @@ import java.time.*;
 import java.time.format.*;
 
 
+
+
+
 /**
  *
  * @Kanin
@@ -39,8 +42,8 @@ public class User extends JFrame implements java.io.Serializable {
     
     public JPanel BoardCard(Board board) {
         JPanel pane = new JPanel(new BorderLayout()) {
-            private boolean hovered = false;
-
+            private boolean 
+                hovered = false;
             {
                 addMouseListener(new java.awt.event.MouseAdapter() {
                     @Override
@@ -80,7 +83,6 @@ public class User extends JFrame implements java.io.Serializable {
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         closeButton.setVisible(false);
         closeButton.setPreferredSize(new Dimension(28, 28));
-
         closeButton.addActionListener(e -> {
             Container parent = pane.getParent();
             if (parent != null) {
@@ -89,9 +91,30 @@ public class User extends JFrame implements java.io.Serializable {
                 System.out.println(Contains);
             }
         });
+        
+        //Setting Button///////
+        JButton settingButton = new JButton();
+        settingButton.setText("⚙");    
+        settingButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        settingButton.setVisible(false);
+        settingButton.setPreferredSize(new Dimension(28, 28));
+        settingButton.addActionListener(e -> {
+            Container parent = pane.getParent();
+            if (parent!=null){
+                Board data = showBoardDialog(board);
+                if (data != null) {
+                    board.setName(data.getName());
+                    board.setDesc(data.getDesc());
+                    board.setIcon(data.getIcon());
+                    board.setBanner(data.getBanner());
+                    DisplayBoard();
+                }
+            }
+        });
 
         JPanel closeBtnWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 4));
         closeBtnWrapper.setOpaque(false);
+        closeBtnWrapper.add(settingButton);
         closeBtnWrapper.add(closeButton);
         banner.add(closeBtnWrapper, BorderLayout.EAST);
 
@@ -99,6 +122,7 @@ public class User extends JFrame implements java.io.Serializable {
             @Override
             public void mouseEntered(MouseEvent e) {
                 closeButton.setVisible(true);
+                settingButton.setVisible(true);
             }
 
             @Override
@@ -108,6 +132,7 @@ public class User extends JFrame implements java.io.Serializable {
                 );
                 if (!pane.contains(p)) {
                     closeButton.setVisible(false);
+                    settingButton.setVisible(false);
                 }
             
             }
@@ -195,9 +220,11 @@ public class User extends JFrame implements java.io.Serializable {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            pane.setBackground(CusColor.hexToColorObject("#f3f4f6")); 
-            Board a = new Board("ez","Dr. Taravichet","😬","Green");
-            Add(a);
+            Board data = showBoardDialog(null);
+            if (data != null) {
+                Add(data);
+    }
+            
         }
 
         @Override
@@ -242,6 +269,65 @@ public class User extends JFrame implements java.io.Serializable {
             panel.add(BoardCard(board)); 
         }
         panel.add(AddBoardCard());
+    }
+    
+    public Board showBoardDialog(Board existingBoard){
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
+        }
+        
+        JPanel panel = new JPanel(new GridLayout(0, 1, 5, 5));
+
+        //name 
+        JTextField nameField = new JTextField();
+        //Desc
+        JTextField descField = new JTextField();
+        //icon
+        JTextField iconField = new JTextField();
+        
+        
+        if (existingBoard != null) {
+            nameField.setText(existingBoard.getName());
+            descField.setText(existingBoard.getDesc());
+            iconField.setText(existingBoard.getIcon());
+        }
+        
+        panel.add(new JLabel("Name:"));
+        panel.add(nameField);
+
+        panel.add(new JLabel("Description:"));
+        panel.add(descField);
+
+        panel.add(new JLabel("Icon:"));
+        panel.add(iconField);
+        
+        //colers
+        String[] colors = {"Red", "Blue", "Green", "Yellow"};
+        JComboBox<String> colorCombo = new JComboBox<>(colors);
+        panel.add(new JLabel("Select Color:"));
+        panel.add(colorCombo);
+
+        int dialog = JOptionPane.showConfirmDialog(null, panel, "input data", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (dialog == JOptionPane.OK_OPTION) {
+            String boardName = nameField.getText();
+            String boardDesc = descField.getText();
+            String boardIcon = iconField.getText();
+            String boardColor = (String) colorCombo.getSelectedItem();
+
+            if (boardName.trim().isEmpty()) {
+                boardName = "Untitled Board";
+            }
+            if (boardIcon.trim().isEmpty()) {
+                boardIcon = "📝";
+            }
+
+            Board newBoard = new Board(boardName, boardDesc, boardIcon, boardColor);
+            return newBoard;
+        }
+        return null;
     }
     
     public static void main(String[] args) {

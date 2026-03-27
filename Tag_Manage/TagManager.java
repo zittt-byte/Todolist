@@ -50,7 +50,7 @@ public class TagManager implements ActionListener{
         model = new DefaultTableModel(){
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; 
+                return false;
             }
         };
         model.setColumnIdentifiers(columnNames);
@@ -61,7 +61,8 @@ public class TagManager implements ActionListener{
         }
 
         table = new JTable(model);
-        table.getColumnModel().getColumn(1).setCellRenderer(new PriorityRenderer());
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getColumnModel().getColumn(1).setCellRenderer(new TagColorRenderer());
         JScrollPane scrollPane = new JScrollPane(table);
         j.add(scrollPane , BorderLayout.CENTER);
         
@@ -140,6 +141,6 @@ public class TagManager implements ActionListener{
         }
         else if (e.getSource().equals(btnModify)){
             Modify();
-        }
+        } 
     }
 }
