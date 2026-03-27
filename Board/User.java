@@ -197,9 +197,54 @@ public class User extends JFrame {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            pane.setBackground(CusColor.hexToColorObject("#f3f4f6")); 
-            Board a = new Board("ez","Dr. Taravichet","😬","Green");
-            Add(a);
+            try {
+                UIManager.setLookAndFeel(new FlatLightLaf());
+            } catch (Exception ex) {
+                System.err.println("Failed to initialize LaF");
+            }
+
+            JPanel panel = new JPanel(new GridLayout(0, 1, 5, 5));
+
+            //name 
+            JTextField nameField = new JTextField();
+            panel.add(new JLabel("Name:"));
+            panel.add(nameField);
+
+            //Desc
+            JTextField descField = new JTextField();
+            panel.add(new JLabel("Description:"));
+            panel.add(descField);
+
+            //icon
+            JTextField iconField = new JTextField();
+            panel.add(new JLabel("Icon:"));
+            panel.add(iconField);
+
+            //colers
+            String[] colors = {"Red", "Blue", "Green", "Yellow"};
+            JComboBox<String> colorCombo = new JComboBox<>(colors);
+            panel.add(new JLabel("Select Color:"));
+            panel.add(colorCombo);
+
+            int dialog = JOptionPane.showConfirmDialog(null, panel, "input data", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            
+            if (dialog == JOptionPane.OK_OPTION) {
+                String boardName = nameField.getText();
+                String boardDesc = descField.getText();
+                String boardIcon = iconField.getText();
+                String boardColor = (String) colorCombo.getSelectedItem();
+
+                if (boardName.trim().isEmpty()) {
+                    boardName = "Untitled Board";
+                }
+                if (boardIcon.trim().isEmpty()) {
+                    boardIcon = "📝";
+                }
+
+                Board newBoard = new Board(boardName, boardDesc, boardIcon, boardColor);
+                Add(newBoard);
+            }
+            
         }
 
         @Override
