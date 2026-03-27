@@ -55,16 +55,17 @@ public class TagManager implements ActionListener{
         };
         model.setColumnIdentifiers(columnNames);
         
-        ArrayList<Object[]> myList = new ArrayList<>();
-        for (Object[] rowData : myList) {
-            model.addRow(rowData);
+        for (Tag tag : board.getTag_contain()) {
+            tags.add(tag);
+            model.addRow(new Object[]{tag.getName(), tag.getColor()});
         }
+
         table = new JTable(model);
         table.getColumnModel().getColumn(1).setCellRenderer(new PriorityRenderer());
         JScrollPane scrollPane = new JScrollPane(table);
         j.add(scrollPane , BorderLayout.CENTER);
         
-        j.setDefaultCloseOperation(3);
+        j.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         j.setVisible(true);
     }
 

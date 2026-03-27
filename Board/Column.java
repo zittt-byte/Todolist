@@ -82,7 +82,7 @@ public class Column extends JPanel implements ActionListener {
         body.add(footer);
         
         
-        ////
+        //// drop target
         
         
         this.add(header,BorderLayout.NORTH);
@@ -127,6 +127,7 @@ public class Column extends JPanel implements ActionListener {
         count++;
         task.setBackground(CusColor.hexToColorObject(color.labelColor));
         body.add(task,count - 1);
+        task.putClientProperty("property", "Task");
         updateUi();
         return 0;
     }
@@ -134,6 +135,16 @@ public class Column extends JPanel implements ActionListener {
     public int removeTask(Task task){
         count--;
         body.remove(task);
+        updateUi();
+        return 0;
+    }
+    
+    public int clearTask(){
+        for (Component c: body.getComponents()) {
+            if (c instanceof Task){
+                body.remove(c);
+            }
+        }
         updateUi();
         return 0;
     }
@@ -146,8 +157,16 @@ public class Column extends JPanel implements ActionListener {
             JFrame ff = new JFrame();
             DesktopPane.add(a);
             a.setVisible(true);
-            ff.getContentPane().add(DesktopPane, BorderLayout.CENTER);
+            Dimension d = a.getSize();
+            if (DesktopPane.getPreferredSize().width < d.width ||
+                DesktopPane.getPreferredSize().height < d.height) {
+                DesktopPane.setPreferredSize(d);
+                DesktopPane.revalidate();
+            }
+            ff.setContentPane(DesktopPane);
             ff.setVisible(true);
+            ff.pack();
+            
                     }
     }
 

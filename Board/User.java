@@ -79,8 +79,6 @@ public class User extends JFrame {
         JButton closeButton = new JButton("X");
         closeButton.setFont(new Font("Inter", Font.BOLD, 24));
         closeButton.setForeground(Color.RED);
-        closeButton.setContentAreaFilled(false);
-        closeButton.setFocusPainted(false);
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         closeButton.setVisible(false);
         closeButton.setPreferredSize(new Dimension(28, 28));
@@ -118,8 +116,8 @@ public class User extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isDescendingFrom(e.getComponent(), closeButton)) return;
-                
-                System.out.println("Board clicked: " + board.getUuid());
+                createBoardView(board);
+
 
             }
 
@@ -140,7 +138,7 @@ public class User extends JFrame {
 
         pane.add(banner, BorderLayout.NORTH);
         title.setFont(new Font("Inter", Font.PLAIN, 24));
-        pane.putClientProperty(FlatClientProperties.STYLE, "arc:16;background:#ffffff;border: 0,0,0,0,#fbbf23;");
+        pane.putClientProperty(FlatClientProperties.STYLE, "arc:16;background:#ffffff;border: 0,0,0,0;");
 
         DateTimeFormatter customFormatter;
         if (board.getCreatedAt().getYear() - LocalDate.now().getYear() == 0) {
@@ -213,6 +211,20 @@ public class User extends JFrame {
         title.setFont(new Font("Inter",Font.PLAIN,48));
         return pane;
     }
+
+    public void createBoardView(Board board){
+        JFrame fr = new JFrame();
+        fr.setSize(1200,1000);
+        BoardView b = new BoardView(board,this);
+        board.addChangeListener(b);
+        fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        fr.add(b);
+        fr.setVisible(true);
+        
+        System.out.println("Board clicked: " + board.getUuid());
+        setVisible(false);
+    }
+    
     
     public void Add(Board board){
         Contains.add(board);
@@ -223,6 +235,7 @@ public class User extends JFrame {
         Contains.remove(board);
         DisplayBoard();
     }
+    
     
     public void DisplayBoard(){
         panel.removeAll();

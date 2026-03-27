@@ -4,7 +4,7 @@
  */
 package Todolist.component;
 
-import Todolist.Priority_Manage.Priority;
+import Todolist.Board.Task;
 import com.formdev.flatlaf.*;
 import java.awt.*;
 import javax.swing.*;
@@ -15,23 +15,13 @@ import javax.swing.*;
  */
 public class PriorityBox extends ComBox{
     
-    public PriorityBox(Priority TT){
+    public PriorityBox(Task task){
         super("PRIORITY");
         JPanel Prioritycollection = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        Prioritycollection.add(TT);
+        Prioritycollection.add(task.getPriority());
         Prioritycollection.putClientProperty(FlatClientProperties.STYLE, "background:#ffffff;");
         Prioritycollection.setBorder(BorderFactory.createEmptyBorder(0, -10, 0, 0));
         Prioritycollection.setAlignmentX(Component.LEFT_ALIGNMENT);
         super.pane.add(Prioritycollection);
     }
-    public static void main(String[] args) {
-        FlatLightLaf.setup();
-        JFrame fr = new JFrame();
-        fr.setSize(700,700);
-        fr.setLayout(new FlowLayout(FlowLayout.LEFT));
-        fr.add(new PriorityBox(new Priority("Low","Green",0)));
-        fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        fr.setVisible(true);
-    }
-    
 }

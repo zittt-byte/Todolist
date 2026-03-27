@@ -1,27 +1,30 @@
 package Todolist.Board;
 
+import Todolist.PersonManger_src.Person;
 import Todolist.Priority_Manage.CusColor;
+import Todolist.Priority_Manage.Priority;
 import Todolist.Tag_Manage.Tag;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
-import java.util.UUID;
-import java.time.LocalDate;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.EventListenerList;
+import java.time.*;
+import javax.swing.event.*;
 
 
 /**
  *
  * @Kanin
  */
-public class Board {
+public class Board implements ActionListener {
     private String name,desc,icon;
     private final String uuid;
     private CusColor Banner; 
     private final LocalDate CreatedAt;
     private ArrayList<Column> contains = new ArrayList<>(Arrays.asList(new Column("●Not Started","Gray",this),new Column("●In Progress","Blue",this),new Column("●Finished","Green",this)));
+    private ArrayList<Priority> priority = new ArrayList<>(Arrays.asList(new Priority("Low",CusColor.GREEN,0),new Priority("Medium",CusColor.YELLOW,1),new Priority("High",CusColor.RED,2),new Priority("Urgent",CusColor.PURPLE,999)));
     private ArrayList<Task> Task_contain = new ArrayList<>();
     private ArrayList<Tag> Tag_contain = new ArrayList<>();
+    private ArrayList<Person> Person_contain = new ArrayList<>();
     private final EventListenerList listenerList = new EventListenerList();
 
 
@@ -50,6 +53,8 @@ public class Board {
         Task_contain.remove(task);
         fireStateChanged();
     }
+    
+    
     
     public void updateTask(String uuid,int to) {
         for (Task task : Task_contain) {
@@ -125,6 +130,10 @@ public class Board {
         this.Task_contain = Task_contain;
     }
 
+    public ArrayList<Priority> getPriority() {
+        return priority;
+    }
+
     public ArrayList<Tag> getTag_contain() {
         return Tag_contain;
     }
@@ -159,4 +168,11 @@ public class Board {
             }
         }
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        
+    }
+    
+    
 }

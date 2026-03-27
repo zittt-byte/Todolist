@@ -13,12 +13,31 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import javax.swing.plaf.InternalFrameUI;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+
+
+// AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | 
+// ══════════════════════════════════════════════════════════════
+//  This File is AI Generated 100%
+// ══════════════════════════════════════════════════════════════
+// AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | AI Generated | 
+
 
 
 // ══════════════════════════════════════════════════════════════
 //  Task Input Internal Frame
 // ══════════════════════════════════════════════════════════════
 public class TaskInternalFrame extends JInternalFrame {
+    
+
+    @Override
+    public InternalFrameUI getUI() {
+        return super.getUI(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
+
+    
 
     // ── Model fields ──────────────────────────────────────────
     private int status;
@@ -55,6 +74,8 @@ public class TaskInternalFrame extends JInternalFrame {
 
     public TaskInternalFrame(Board board,Column column) {
         super("New Task", false, true, false, false);
+        BasicInternalFrameUI ui = (BasicInternalFrameUI)this.getUI();
+        ui.setNorthPane(null);
         this.board = board;
         this.column = column;
         TAG_OPTIONS = board.getTag_contain();
@@ -165,7 +186,7 @@ public class TaskInternalFrame extends JInternalFrame {
     
 
     private JComboBox<Priority> buildPriorityCombo() {
-        priorityCombo = new JComboBox<>(Priority.priority.toArray(new Priority[0]));
+        priorityCombo = new JComboBox<>(board.getPriority().toArray(new Priority[0]));
         priorityCombo.setBackground(CARD);
         priorityCombo.setForeground(TEXT);
         priorityCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -198,8 +219,8 @@ public class TaskInternalFrame extends JInternalFrame {
     }
 
     private JTextField buildIconField() {
-        iconField = styledTextField("🚀  or icon name");
-        iconField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "🚀  or icon name");
+        iconField = styledTextField("icon");
+        iconField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Icon");
         return iconField;
     }
 
@@ -299,7 +320,7 @@ public class TaskInternalFrame extends JInternalFrame {
         System.out.print("Tags     : ");
         tags.forEach(t -> System.out.print("[" + t.getName() + "/" + t.getColor() + "] "));
         System.out.println("");
-        Task a = new Task(title,desc,icon,priority,status,tags,deadline);
+        Task a = new Task(title,desc,icon,priority,status,null,tags,deadline);
         this.board.addTask(a);
         System.out.println(status);
         System.out.println(a.getStatus());
