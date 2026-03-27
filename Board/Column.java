@@ -165,6 +165,7 @@ public class Column extends JPanel implements ActionListener,java.io.Serializabl
             }
             ff.setContentPane(DesktopPane);
             ff.setVisible(true);
+            ff.setLocationRelativeTo(null);
             ff.pack();
             
                     }

@@ -2,6 +2,7 @@ package Todolist.Board;
 
 
 import Todolist.Priority_Manage.CusColor;
+import static Todolist.Todo.src.main.LoginRegister.saverLoader.*;
 import com.formdev.flatlaf.*;
 import component.RoundedTopPanel;
 import java.util.ArrayList;
@@ -11,32 +12,32 @@ import java.awt.event.*;
 import java.time.*;
 import java.time.format.*;
 
-
-
-
-
 /**
  *
  * @Kanin
  */
-public class User extends JFrame implements java.io.Serializable {
+public class User extends JFrame implements WindowListener {
     public String name;
     public ArrayList<Board> Contains;
     public JPanel panel;
     
-    public User(){
-        Contains = new ArrayList<Board>();
-        panel = new JPanel(new FlowLayout(FlowLayout.CENTER,10, 10));
-        Board a = new Board("OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026OOP 2026","Dr. Taravichet","😬","Green");
-
-        panel.setPreferredSize(new Dimension(700,700));
-        setSize(700,700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+    public User(String name){
         
+        this.name = name;
+        Contains = loadObjectFromFile(name);
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER,10, 10));
+        
+        panel.setPreferredSize(new Dimension(700,600));
+        setSize(1000,1000);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        this.add(new BarPanel(name),BorderLayout.NORTH);
         this.add(panel);
-        Add(a);
+        DisplayBoard();
+        setLocationRelativeTo(null);
         setVisible(true);
+        this.addWindowListener(this);
+        
         
     }
     
@@ -140,8 +141,6 @@ public class User extends JFrame implements java.io.Serializable {
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isDescendingFrom(e.getComponent(), closeButton)) return;
                 createBoardView(board);
-
-
             }
 
             @Override
@@ -240,10 +239,11 @@ public class User extends JFrame implements java.io.Serializable {
     public void createBoardView(Board board){
         JFrame fr = new JFrame();
         fr.setSize(1200,1000);
-        BoardView b = new BoardView(board,this);
+        BoardView b = new BoardView(board,this,name);
         board.addChangeListener(b);
         fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fr.add(b);
+        fr.setLocationRelativeTo(null);
         fr.setVisible(true);
         System.out.println("Board clicked: " + board.getUuid());
         setVisible(false);
@@ -332,7 +332,32 @@ public class User extends JFrame implements java.io.Serializable {
     
     public static void main(String[] args) {
         FlatLightLaf.setup();
-        new User();
+        new User("kanin");
     }
+
+    @Override
+    public void windowOpened(WindowEvent e) {}
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        System.out.println("saving");
+        saveObjectToFile(this.Contains,name);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {}
+
+    @Override
+    public void windowIconified(WindowEvent e) {}
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {}
+
+    @Override
+    public void windowActivated(WindowEvent e) {}
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {}
+
     
 }

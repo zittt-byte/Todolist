@@ -24,7 +24,7 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
     public Bar panelbar;
     
 
-    public BoardView(Board board,User Parent) {
+    public BoardView(Board board,User Parent,String name) {
         this.board = board;
         parent = Parent;
         pane = new JPanel();
@@ -40,7 +40,7 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
 
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        panelbar = new BoardBarPanel(this);
+        panelbar = new BoardBarPanel(this,name);
         this.add(pane,BorderLayout.CENTER);
         this.add((BoardBarPanel)panelbar,BorderLayout.NORTH);
         
@@ -51,17 +51,27 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
     }
     
      
-    private void attachCloseButton(Task task) {
+    private void attachButton(Task task) {
        JButton closeButton = new JButton("✕");
        closeButton.setFont(new Font("SeNoto Color Emoji", Font.PLAIN, 12));
        closeButton.putClientProperty(FlatClientProperties.STYLE, "border:2,2,2,2,#d1d1d1,1,12;");
        closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
        closeButton.setPreferredSize(new Dimension(24, 24));
        closeButton.setVisible(false);
+       
+       JButton ModifyButton = new JButton("🔧");
+       ModifyButton.setFont(new Font("SeNoto Color Emoji", Font.PLAIN, 12));
+       ModifyButton.putClientProperty(FlatClientProperties.STYLE, "border:2,2,2,2,#d1d1d1,1,12;");
+       ModifyButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+       ModifyButton.setPreferredSize(new Dimension(24, 24));
+       ModifyButton.setVisible(false);
 
        JPanel closeBtnWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 4));
        closeBtnWrapper.setOpaque(false);
+       closeBtnWrapper.add(ModifyButton);
        closeBtnWrapper.add(closeButton);
+       
+
 
        JLayeredPane lp = task.getLayeredPane();
        lp.add(closeBtnWrapper, JLayeredPane.PALETTE_LAYER);
@@ -70,6 +80,7 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
            @Override
            public void mouseEntered(MouseEvent e) {
                closeButton.setVisible(true);
+               ModifyButton.setVisible(true);
            }
 
            @Override
@@ -77,6 +88,7 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
                Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), task.getWrapper());
                if (!task.getWrapper().contains(p)) {
                    closeButton.setVisible(false);
+                   ModifyButton.setVisible(false);
                }
            }
        });
@@ -87,6 +99,24 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
                board.removeTask(task);
                render();
            }
+       });
+       
+       ModifyButton.addActionListener(e -> {
+            TaskInternalFrame a = new TaskInternalFrame(this.board,this.board.getContains().get(task.getStatus()));
+            a.loadTask(task);
+            JDesktopPane DesktopPane = new JDesktopPane();
+            JFrame ff = new JFrame();
+            DesktopPane.add(a);
+            a.setVisible(true);
+            Dimension d = a.getSize();
+            if (DesktopPane.getPreferredSize().width < d.width ||
+                DesktopPane.getPreferredSize().height < d.height) {
+                DesktopPane.setPreferredSize(d);
+                DesktopPane.revalidate();
+            }
+            ff.setContentPane(DesktopPane);
+            ff.setVisible(true);
+            ff.pack();
        });
    }    
     public void render() {
@@ -112,7 +142,7 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
         for (Task task : ListClone) {
             if ((tag.isEmpty() || !Collections.disjoint(tag, task.getTag())) && (priority.isEmpty() || priority.contains(task.getPriority())) && (person.isEmpty() || person.contains(task.getAssignee()))) {
                 board.getContains().get(task.getStatus()).columnAddTask(task);
-                attachCloseButton(task);
+                attachButton(task);
             }
         }
     }
@@ -176,7 +206,7 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
             popup.show(BarPanel.SwapButton, 0, BarPanel.SwapButton.getHeight());
         } else if (source.equals(BarPanel.MagnifierButton)) {
             JPopupMenu popup = ((BoardBarPanel)panelbar).SortBox();
-            popup.show(BarPanel.SwapButton, 0, BarPanel.SwapButton.getHeight());
+            popup.show(BarPanel.MagnifierButton, 0, BarPanel.MagnifierButton.getHeight());
         } else if (source.equals(BarPanel.prepleButton)) {
             new PersonManager(this.board);
             

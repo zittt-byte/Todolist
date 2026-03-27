@@ -41,7 +41,8 @@ public class UserRegistration {
             // สเต็ปที่ 5: สั่งประมวลผลการบันทึกข้อมูล (executeUpdate)
             pstmt.executeUpdate();
             System.out.println("✅ สมัครสมาชิกสำเร็จ! ยินดีต้อนรับคุณ " + name);
-            return  true ;
+            
+            return true;
         } catch (SQLException e) {
             // สเต็ปที่ 6: จัดการ Error (เช่น กรณีคนใช้อีเมลซ้ำ)
             // ถ้าจำได้ เราตั้งค่าอีเมลเป็น UNIQUE ไว้ในโครงสร้างตาราง

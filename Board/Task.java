@@ -9,12 +9,8 @@ import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.awt.event.*;
+import java.time.*;
 import java.util.*;
 import javax.swing.*;
 
@@ -32,9 +28,10 @@ public class Task extends JPanel implements java.io.Serializable {
     private final LocalDateTime CreatedAt = LocalDateTime.now();
     private LocalDateTime Deadline;
     
-    public JLabel title_label,icon_label;
-    public JPanel wrapper;
+    public JLabel icon_label,emojiLabel,titleLabel;
+    public JPanel wrapper,tagcollection;
     private JLayeredPane layeredPane;
+    private Priority difficultyBadge;
     
     
     
@@ -59,15 +56,26 @@ public class Task extends JPanel implements java.io.Serializable {
             {
                 addMouseListener(new java.awt.event.MouseAdapter() {
                     @Override
-                    public void mouseEntered(java.awt.event.MouseEvent e) {
+                    public void mouseEntered(MouseEvent e) {
                         hovered = true;
                         repaint();
                     }
-
+                    
                     @Override
-                    public void mouseExited(java.awt.event.MouseEvent e) {
-                        java.awt.Component c = e.getComponent();
-                        java.awt.Point p = e.getPoint();
+                    public void mouseClicked(MouseEvent e) {
+                        JFrame temp = new JFrame();
+                        TaskView b = new TaskView(Task.this);
+                        temp.add(b);
+                        temp.setSize(650,700);
+                        temp.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        temp.setVisible(true);
+                        temp.setLocationRelativeTo(null);
+                    }
+                    
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        Component c = e.getComponent();
+                        Point p = e.getPoint();
                         if (!c.contains(p)) {
                             hovered = false;
                             repaint();
@@ -80,7 +88,7 @@ public class Task extends JPanel implements java.io.Serializable {
         wrapper.setLayout(new BorderLayout());
         wrapper.setOpaque(false);
 
-        JPanel tagcollection = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 2));
+        tagcollection = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 2));
         tagcollection.setOpaque(false);
         tagcollection.setAlignmentX(Component.LEFT_ALIGNMENT);
         for (Tag tag : Tag) {
@@ -89,10 +97,10 @@ public class Task extends JPanel implements java.io.Serializable {
             tag.setBorder(null);
         }
 
-        JLabel emojiLabel = new JLabel(icon);
+        emojiLabel = new JLabel(icon);
         emojiLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 28));
 
-        JLabel titleLabel = new JLabel("<html>" + title + "</html>");
+        titleLabel = new JLabel("<html>" + title + "</html>");
         titleLabel.setFont(new Font("Georgia", Font.BOLD, 20));
         titleLabel.setForeground(new Color(30, 30, 30));
 
@@ -119,7 +127,7 @@ public class Task extends JPanel implements java.io.Serializable {
         gbc.insets  = new Insets(18, 0, 4, 20);
         titleRow.add(titleLabel, gbc);
 
-        Priority difficultyBadge = priority.copy();
+        difficultyBadge = priority.copy();
         difficultyBadge.setAlignmentX(Component.LEFT_ALIGNMENT);
         difficultyBadge.setMaximumSize(difficultyBadge.getPreferredSize());
 
@@ -185,6 +193,27 @@ public class Task extends JPanel implements java.io.Serializable {
             Transferable t = new StringSelection(uuid);
             dge.startDrag(DragSource.DefaultMoveDrop, t);
         });
+        
+        
+    }
+    
+    public void refresh() {
+        emojiLabel.setText(icon);
+        titleLabel.setText("<html>" + title + "</html>");
+        Priority fresh = priority.copy();
+        difficultyBadge.setName(fresh.getName());
+        difficultyBadge.setColor(fresh.getColor());
+        difficultyBadge.repaint();
+        tagcollection.removeAll();
+        for (Tag tag : Tag) {
+            Tag holder = tag.copy();
+            tagcollection.add(holder);
+            tag.setBorder(null);
+        }
+        tagcollection.revalidate();
+        tagcollection.repaint();
+        revalidate();
+        repaint();
     }
     
     public JLayeredPane getLayeredPane() {
@@ -194,6 +223,7 @@ public class Task extends JPanel implements java.io.Serializable {
     public JPanel getWrapper() {
         return wrapper;
     }
+    
     
     
     public JPanel timepanel() {

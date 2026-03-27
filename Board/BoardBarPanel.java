@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 
 /**
  *
@@ -39,8 +40,9 @@ public class BoardBarPanel extends BarPanel implements Bar,ActionListener{
     public JPanel center,right,left;
     private String sort = "Age";
 
-    public BoardBarPanel(BoardView bv) {
-        super("Kanin");
+    public BoardBarPanel(BoardView bv,String name) {
+        super(name);
+        System.out.println(reverseButton.getFont());
         this.bv = bv;
         left = new JPanel(new FlowLayout());
         left.add(reverseButton);

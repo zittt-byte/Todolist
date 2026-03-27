@@ -66,6 +66,7 @@ public class PriorithyManager implements ActionListener{
         
         j.setDefaultCloseOperation(3);
         j.setVisible(true);
+        j.setLocationRelativeTo(null);
     }
 
     public String getName() {

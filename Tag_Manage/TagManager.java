@@ -68,6 +68,7 @@ public class TagManager implements ActionListener{
         
         j.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         j.setVisible(true);
+        j.setLocationRelativeTo(null);
     }
 
     public String getName() {

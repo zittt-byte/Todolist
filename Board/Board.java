@@ -6,6 +6,7 @@ import Todolist.Priority_Manage.Priority;
 import Todolist.Tag_Manage.Tag;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.*;
 import java.time.*;
 import javax.swing.event.*;
@@ -25,7 +26,7 @@ public class Board implements ActionListener,java.io.Serializable {
     private ArrayList<Task> Task_contain = new ArrayList<>();
     private ArrayList<Tag> Tag_contain = new ArrayList<>();
     private ArrayList<Person> Person_contain = new ArrayList<>();
-    private final EventListenerList listenerList = new EventListenerList();
+    private transient EventListenerList listenerList = new EventListenerList();
 
 
 
@@ -54,6 +55,10 @@ public class Board implements ActionListener,java.io.Serializable {
         fireStateChanged();
     }
     
+    public void render() {
+        fireStateChanged();
+    }
+    
     
     
     public void updateTask(String uuid,int to) {
@@ -61,7 +66,6 @@ public class Board implements ActionListener,java.io.Serializable {
             if (task.getUuid().equals(uuid)) {
                 task.setStatus(to);
             }
-        
         }
         fireStateChanged();
     }
@@ -177,6 +181,12 @@ public class Board implements ActionListener,java.io.Serializable {
     
     public void removeTag(Tag tag) {
         Tag_contain.remove(tag);
+    }
+    
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        listenerList = new EventListenerList();
     }
     
     public void modifyTag(int index,String name,CusColor color) {

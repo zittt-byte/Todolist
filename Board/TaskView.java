@@ -23,16 +23,26 @@ public class TaskView extends JPanel implements ActionListener,java.io.Serializa
         
         header.setFont(new Font("Inter",Font.BOLD,24));
         desc.setFont(new Font("Inter",Font.PLAIN,14));
+        
+        
         header.setAlignmentX(Component.LEFT_ALIGNMENT);
         desc.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        add(Etc.boxFiller(20, 20));
+        header.setMaximumSize(new Dimension(Integer.MAX_VALUE, header.getPreferredSize().height));
+        desc.setMaximumSize(new Dimension(Integer.MAX_VALUE, desc.getPreferredSize().height));
+        
+        header.setBorder(BorderFactory.createEmptyBorder(0, 32, 0, 0));
+        desc.setBorder(BorderFactory.createEmptyBorder(0, 32, 0, 0));
+
+        
         add(header);
         add(Etc.boxFiller(0, 10));
         add(desc);
         add(Etc.boxFiller(0, 10));
         
         BoxGroup body = new BoxGroup(task);
+        
+        body.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         add(body);
     }

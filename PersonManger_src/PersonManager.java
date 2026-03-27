@@ -59,6 +59,7 @@ public class PersonManager {
  
         fr.add(mainpn);
         fr.setVisible(true);
+        fr.setLocationRelativeTo(null);
     }
  
     private ImageIcon createPlaceholderIcon() {

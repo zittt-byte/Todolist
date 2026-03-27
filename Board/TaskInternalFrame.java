@@ -68,6 +68,8 @@ public class TaskInternalFrame extends JInternalFrame {
     private static final Color SUCCESS = new Color(52, 211, 153);
     private static final Color DANGER  = new Color(248, 113, 113);
     private static final Color BORDER  = new Color(55, 55, 75);
+    
+    private Task editingTask = null;
 
     // Predefined tag options as Tag objects — colour already baked in
     private ArrayList<Tag> TAG_OPTIONS;
@@ -164,6 +166,93 @@ public class TaskInternalFrame extends JInternalFrame {
         scroll.getVerticalScrollBar().setUnitIncrement(12);
         return scroll;
     }
+    
+    public void loadTask(Task task) {
+        this.editingTask = task;
+
+        // ── Header ────────────────────────────────────────────
+        setTitle("Edit Task");
+
+        // Swap the heading label text by walking the content-pane tree.
+        // buildHeader() puts the heading JLabel inside a BoxLayout panel
+        // that is added to NORTH of root, which is itself wrapped once more.
+        // It is simpler and safer to just search by type + font size.
+        swapHeadingLabel("Edit Task", "Modify the details below");
+
+        // ── Fields ────────────────────────────────────────────
+        titleField.setText(task.getTitle());
+        descArea.setText(task.getDesc());
+        iconField.setText(task.getIcon() != null ? task.getIcon() : "");
+
+        // Priority — match by object identity first, fall back to name
+        for (int i = 0; i < priorityCombo.getItemCount(); i++) {
+            Priority p = priorityCombo.getItemAt(i);
+            if (p == task.getPriority() ||
+                    (p != null && p.getName().equals(task.getPriority().getName()))) {
+                priorityCombo.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        // Status / Column
+        int colIndex = task.getStatus();
+        if (colIndex >= 0 && colIndex < statusCombo.getItemCount()) {
+            statusCombo.setSelectedIndex(colIndex);
+        }
+
+        // Deadline — convert LocalDateTime → java.util.Date for the spinner
+        java.util.Date deadlineDate = java.util.Date.from(
+            task.getDeadline()
+                .atZone(java.time.ZoneId.systemDefault())
+                .toInstant()
+        );
+        deadlineSpinner.setValue(deadlineDate);
+
+        // Tags
+        tags.clear();
+        tags.addAll(task.getTag());
+        tagsDropdown.setSelected(new ArrayList<>(task.getTag()));
+
+        // Assignee — null → index 0 ("— Unassigned —")
+        Person assignee = task.getAssignee();
+        if (assignee == null) {
+            personCombo.setSelectedIndex(0);
+        } else {
+            for (int i = 1; i < personCombo.getItemCount(); i++) {
+                Person p = personCombo.getItemAt(i);
+                if (p == assignee || (p != null && p.getName().equals(assignee.getName()))) {
+                    personCombo.setSelectedIndex(i);
+                    break;
+                }
+            }
+        }
+    }
+    
+    private void swapHeadingLabel(String heading, String sub) {
+        findAndReplaceLabel((JComponent) getContentPane(), heading, sub);
+    }
+
+    private boolean foundHeading = false;
+
+    private void findAndReplaceLabel(JComponent root, String heading, String sub) {
+        for (Component c : root.getComponents()) {
+            if (c instanceof JLabel lbl) {
+                Font f = lbl.getFont();
+                if (!foundHeading && f != null && f.getSize() >= 20) {
+                    lbl.setText(heading);
+                    foundHeading = true;
+                } else if (foundHeading && f != null && f.getSize() <= 14
+                        && lbl.getForeground().equals(MUTED)) {
+                    lbl.setText(sub);
+                    return; // both labels swapped
+                }
+            }
+            if (c instanceof JComponent jc) {
+                findAndReplaceLabel(jc, heading, sub);
+            }
+        }
+    }
+
 
     // ── Field Builders ────────────────────────────────────────
     private JTextField buildTitleField() {
@@ -344,11 +433,22 @@ public class TaskInternalFrame extends JInternalFrame {
         System.out.println("");
         Person assignee = (Person) personCombo.getSelectedItem();
 
-        Task a = new Task(title,desc,icon,priority,status,assignee,tags,deadline);
-        this.board.addTask(a);
-        
-
-        
+        if (editingTask != null) {
+            // ── Edit mode: mutate the existing task in-place ──────
+            editingTask.setTitle(title);
+            editingTask.setDesc(desc);
+            editingTask.setIcon(icon);
+            editingTask.setPriority(priority);
+            editingTask.setStatus(status);
+            editingTask.setAssignee(assignee);
+            editingTask.setTag(new ArrayList<>(tags));
+            editingTask.setDeadline(deadline);
+            editingTask.refresh();
+        } else {
+            // ── Create mode: add a brand-new task ─────────────────
+            Task a = new Task(title, desc, icon, priority, status, assignee, tags, deadline);
+            this.board.addTask(a);
+        }
         System.out.println();
     }
 

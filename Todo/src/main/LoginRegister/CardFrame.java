@@ -1,5 +1,6 @@
 package Todolist.Todo.src.main.LoginRegister;
 
+import Todolist.Board.User;
 import Todolist.Todo.src.main.java.*;
 import component.*;
 import javax.swing.*;
@@ -14,16 +15,14 @@ import resources.Etc;
 
 
 
-public class CardFrame extends JInternalFrame {
+public class CardFrame extends JPanel {
 
     private CardLayout cardLayout;
     private JPanel mainContainer;
 
     public CardFrame() {
-        setTitle("TodoList");
         setSize(350, 300);
         setBackground(Color.WHITE);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
@@ -46,8 +45,8 @@ public class CardFrame extends JInternalFrame {
         panel.setBackground(Color.white);
         panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
         
-        JTextField txtUser = new ComTextField("Username",new ImageIcon(getClass().getResource("/resources/mail.png")));
-        JPasswordField txtPin = new ComPasswordField("PIN",new ImageIcon(getClass().getResource("/resources/lock.png")));
+        JTextField txtUser = new ComTextField("Username",new ImageIcon(getClass().getResource("/Todolist/resources/mail.png")));
+        JPasswordField txtPin = new ComPasswordField("PIN",new ImageIcon(getClass().getResource("/Todolist/resources/lock.png")));
         JPanel header = new ComHeader("Welcome back","Sign In to get Started");
         
         
@@ -87,8 +86,9 @@ public class CardFrame extends JInternalFrame {
 
             boolean isSuccess = UserLogin.authenticate(username,password);
             if (isSuccess) {
-                JOptionPane.showMessageDialog(this, "Logging in!...");
-                // dashborad open ???
+                new User(username.toLowerCase());
+                ((JFrame)this.getParent().getParent().getParent().getParent()).dispose();
+                
             }
             else
                 JOptionPane.showMessageDialog(this,"Incorrect User");
@@ -103,9 +103,9 @@ public class CardFrame extends JInternalFrame {
         panel.setBackground(Color.white);
         panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
 
-        JTextField txtName = new ComTextField("Name",new ImageIcon(getClass().getResource("/resources/user.png")));
-        JTextField txtEmail = new ComTextField("Email",new ImageIcon(getClass().getResource("/resources/mail.png")));
-        JPasswordField txtPin = new ComPasswordField("PIN",new ImageIcon(getClass().getResource("/resources/lock.png")));
+        JTextField txtName = new ComTextField("Name",new ImageIcon(getClass().getResource("/Todolist/resources/user.png")));
+        JTextField txtEmail = new ComTextField("Email",new ImageIcon(getClass().getResource("/Todolist/resources/mail.png")));
+        JPasswordField txtPin = new ComPasswordField("PIN",new ImageIcon(getClass().getResource("/Todolist/resources/lock.png")));
         JPanel header = new ComHeader("Create an account","Sign up to get Started");
         JButton btnRegister = new ComButton("Sign up",Color.ORANGE,Color.WHITE);
         JButton btnBackToLogin = new JButton("Sign in");
