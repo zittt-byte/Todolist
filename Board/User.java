@@ -12,6 +12,9 @@ import java.time.*;
 import java.time.format.*;
 
 
+
+
+
 /**
  *
  * @Kanin
@@ -82,7 +85,6 @@ public class User extends JFrame {
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         closeButton.setVisible(false);
         closeButton.setPreferredSize(new Dimension(28, 28));
-
         closeButton.addActionListener(e -> {
             Container parent = pane.getParent();
             if (parent != null) {
@@ -91,9 +93,67 @@ public class User extends JFrame {
                 System.out.println(Contains);
             }
         });
+        
+        //Setting Button///////
+        JButton settingButton = new JButton();
+        settingButton.setText("⚙");    
+        settingButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        settingButton.setVisible(false);
+        settingButton.setPreferredSize(new Dimension(28, 28));
+        settingButton.addActionListener(e -> {
+            Container parent = pane.getParent();
+            if (parent != null) {
+                try {
+                UIManager.setLookAndFeel(new FlatLightLaf());
+            } catch (Exception ex) {
+                System.err.println("Failed to initialize LaF");
+            }
+
+            JPanel panel = new JPanel(new GridLayout(0, 1, 5, 5));
+
+            //name 
+            JTextField nameField = new JTextField();
+            panel.add(new JLabel("Name:"));
+            panel.add(nameField);
+
+            //Desc
+            JTextField descField = new JTextField();
+            panel.add(new JLabel("Description:"));
+            panel.add(descField);
+
+            //icon
+            JTextField iconField = new JTextField();
+            panel.add(new JLabel("Icon:"));
+            panel.add(iconField);
+
+            //colers
+            String[] colors = {"Red", "Blue", "Green", "Yellow"};
+            JComboBox<String> colorCombo = new JComboBox<>(colors);
+            panel.add(new JLabel("Select Color:"));
+            panel.add(colorCombo);
+
+            int dialog = JOptionPane.showConfirmDialog(null, panel, "input data", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (dialog == JOptionPane.OK_OPTION) {
+                    String boardName = nameField.getText();
+                    String boardDesc = descField.getText();
+                    String boardIcon = iconField.getText();
+                    String boardColor = (String) colorCombo.getSelectedItem();
+
+                    if (boardName.trim().isEmpty()) {
+                        boardName = "Untitled Board";
+                    }
+                    if (boardIcon.trim().isEmpty()) {
+                        boardIcon = "📝";
+                    }
+                    board.setName(boardName);board.setDesc(boardDesc);board.setIcon(boardIcon);board.setBanner(CusColor.colorFromString(boardColor));
+                    DisplayBoard();
+                }
+            }
+        });
 
         JPanel closeBtnWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 4));
         closeBtnWrapper.setOpaque(false);
+        closeBtnWrapper.add(settingButton);
         closeBtnWrapper.add(closeButton);
         banner.add(closeBtnWrapper, BorderLayout.EAST);
 
@@ -101,6 +161,7 @@ public class User extends JFrame {
             @Override
             public void mouseEntered(MouseEvent e) {
                 closeButton.setVisible(true);
+                settingButton.setVisible(true);
             }
 
             @Override
@@ -110,6 +171,7 @@ public class User extends JFrame {
                 );
                 if (!pane.contains(p)) {
                     closeButton.setVisible(false);
+                    settingButton.setVisible(false);
                 }
             
             }
