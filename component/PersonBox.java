@@ -24,8 +24,11 @@ public class PersonBox extends ComBox {
         JPanel wrapper = new JPanel();
         if (task.getAssignee() != null){
             text.setText(task.getAssignee().getName());
-            text.setIcon(Etc.resizeImageIcon(task.getAssignee().getIcon(), 24, 24));
+            if (task.getAssignee() != null){
+                text.setIcon(Etc.resizeImageIcon(task.getAssignee().getIcon(), 24, 24));
+            }
         }
+        
         
         pane.putClientProperty(FlatClientProperties.STYLE, "background:#ffffff;");
         pane.add(text);

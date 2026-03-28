@@ -47,10 +47,11 @@ public class BoardBarPanel extends BarPanel implements Bar,ActionListener{
         left = new JPanel(new FlowLayout());
         left.add(reverseButton);
         left.add(refreshButton);
-        left.add(eyeButton);
+        
         
         
         center = new JPanel(new FlowLayout());
+        center.add(eyeButton);
         center.add(SwapButton);
         center.add(MagnifierButton);
 

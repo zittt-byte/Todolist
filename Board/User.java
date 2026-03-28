@@ -79,7 +79,7 @@ public class User extends JFrame implements WindowListener {
         emojiLabel.setBounds(20, 30, 40, 40);
 
         JButton closeButton = new JButton("X");
-        closeButton.setFont(new Font("Inter", Font.BOLD, 24));
+        closeButton.setFont(new Font("Inter", Font.PLAIN, 24));
         closeButton.setForeground(Color.RED);
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         closeButton.setVisible(false);
@@ -87,9 +87,14 @@ public class User extends JFrame implements WindowListener {
         closeButton.addActionListener(e -> {
             Container parent = pane.getParent();
             if (parent != null) {
-                Remove(board);
-                Contains.remove(board);
-                System.out.println(Contains);
+                int result = JOptionPane.showConfirmDialog(this,"Delete Board \"" + board.getName() + "\"?","Confirm Delete",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+                if (result == JOptionPane.YES_OPTION) {
+                    Remove(board);
+                    Contains.remove(board);
+                    System.out.println(Contains);
+                }
+                
+
             }
         });
         
@@ -304,7 +309,7 @@ public class User extends JFrame implements WindowListener {
         panel.add(iconField);
         
         //colers
-        String[] colors = {"Red", "Blue", "Green", "Yellow"};
+        String[] colors = CusColor.COLORNAME;
         JComboBox<String> colorCombo = new JComboBox<>(colors);
         panel.add(new JLabel("Select Color:"));
         panel.add(colorCombo);

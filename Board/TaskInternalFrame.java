@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.InternalFrameUI;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
@@ -314,6 +315,7 @@ public class TaskInternalFrame extends JInternalFrame {
     private JTextField buildIconField() {
         iconField = styledTextField("icon");
         iconField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Icon");
+        iconField.setFont(new FontUIResource("Segoe UI Emoji", Font.PLAIN, 12));
         return iconField;
     }
 

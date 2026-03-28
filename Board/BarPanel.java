@@ -16,7 +16,7 @@ public class BarPanel extends JPanel {
     public BarPanel(String text){
         setLayout(new BorderLayout());
         JPanel wrapper = new JPanel();
-        welcome = new JLabel("<html><nobr>Hello, <font color='#ff0000'>"+text+"</font></nobr></html>");
+        welcome = new JLabel("<html><nobr>Hello, <font color='#ff0000'>"+capitalize(text)+"</font></nobr></html>");
         welcome.setFont(new Font("Inria Serif", Font.PLAIN, 32));
         wrapper.add(welcome);
         wrapper.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -25,4 +25,9 @@ public class BarPanel extends JPanel {
         
     }
     
+String capitalize(String str) {
+    char firstChar = Character.toUpperCase(str.charAt(0)); 
+    return firstChar + str.substring(1); 
+    }
+
 }
