@@ -164,9 +164,9 @@ public class User extends JFrame implements WindowListener {
 
         DateTimeFormatter customFormatter;
         if (board.getCreatedAt().getYear() - LocalDate.now().getYear() == 0) {
-            customFormatter = DateTimeFormatter.ofPattern("dd MMM");
+            customFormatter = DateTimeFormatter.ofPattern("dd - MM - yy");
         } else {
-            customFormatter = DateTimeFormatter.ofPattern("dd MMM yy");
+            customFormatter = DateTimeFormatter.ofPattern("dd - MM - yy");
         }
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(280, 120));
