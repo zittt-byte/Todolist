@@ -178,10 +178,11 @@ public class Column extends JPanel implements ActionListener,java.io.Serializabl
                 DesktopPane.setPreferredSize(d);
                 DesktopPane.revalidate();
             }
+            
             ff.setContentPane(DesktopPane);
             ff.setVisible(true);
-            ff.setLocationRelativeTo(null);
             ff.pack();
+            ff.setLocationRelativeTo(null);
             
                     }
     }

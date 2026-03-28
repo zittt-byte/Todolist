@@ -4,6 +4,7 @@ import Todolist.PersonManger_src.*;
 import Todolist.Priority_Manage.CusColor;
 import static Todolist.Priority_Manage.CusColor.hexToColorObject;
 import Todolist.Priority_Manage.Priority;
+import Todolist.ProgressBar.UserDataBreakdown;
 
 import Todolist.Tag_Manage.*;
 import com.formdev.flatlaf.FlatClientProperties;
@@ -41,7 +42,7 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         panelbar = new BoardBarPanel(this,name);
-        this.add(pane,BorderLayout.CENTER);
+        this.add(scrollPane,BorderLayout.CENTER);
         this.add((BoardBarPanel)panelbar,BorderLayout.NORTH);
         
         
@@ -214,8 +215,22 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
             
         } else if (source.equals(BarPanel.settinButton)) {
             new TagManager(this.board);
-            
         } else if (source.equals(BarPanel.burgerButton)) {
+            UserDataBreakdown a = new UserDataBreakdown(this.board);
+            JDesktopPane DesktopPane = new JDesktopPane();
+            JFrame ff = new JFrame();
+            DesktopPane.add(a);
+            Dimension d = a.getSize();
+            if (DesktopPane.getPreferredSize().width < d.width ||
+                DesktopPane.getPreferredSize().height < d.height) {
+                DesktopPane.setPreferredSize(d);
+                DesktopPane.revalidate();
+            }
+            ff.setContentPane(DesktopPane);
+            ff.pack();
+            ff.setVisible(true);
+            ff.setLocationRelativeTo(null);
+
             
         }
     }

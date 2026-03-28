@@ -19,12 +19,12 @@ public class PersonBox extends ComBox {
     public PersonBox(Task task){
         super("ASSIGNEE");
         JPanel pane = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel text = new JLabel();
+        JLabel text = new JLabel("");
         text.setFont(new Font("Inter",Font.PLAIN,16));
         JPanel wrapper = new JPanel();
         if (task.getAssignee() != null){
             text.setText(task.getAssignee().getName());
-            if (task.getAssignee() != null){
+            if (task.getAssignee().getIcon() != null){
                 text.setIcon(Etc.resizeImageIcon(task.getAssignee().getIcon(), 24, 24));
             }
         }

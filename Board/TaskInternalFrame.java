@@ -450,7 +450,9 @@ public class TaskInternalFrame extends JInternalFrame {
             // ── Create mode: add a brand-new task ─────────────────
             Task a = new Task(title, desc, icon, priority, status, assignee, tags, deadline);
             this.board.addTask(a);
+            
         }
+        ((JFrame)this.getParent().getParent().getParent().getParent()).dispose();
         System.out.println();
     }
 

@@ -1,83 +1,90 @@
 package Todolist.ProgressBar;
 
+
+/**
+ *
+ * @author apimookweerakunwattana
+ */
 import Todolist.Priority_Manage.CusColor;
+import Todolist.Priority_Manage.Priority;
 import Todolist.Tag_Manage.Tag;
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicProgressBarUI;
-import java.awt.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.awt.*;
 
-public class TagProgressBar {
-    public JFrame fr;
-    public JPanel pa;
-    public JLabel ltag;
-    public Tag tag;
+
+public class TagProgressBar extends JPanel {
+    public JPanel toppn;
+    public JLabel task;
+    public JPanel pbur;
+    public Priority priority;
+    private int sum;
+    public List<Map.Entry<Tag, Integer>> entry;
     
-    //Main GUI
-    public TagProgressBar(){
-        fr = new JFrame();
-        pa = new JPanel(); pa.setLayout(new BoxLayout(pa,BoxLayout.Y_AXIS));
-        pa.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        ltag = new JLabel("Tag ProgressBar");
+    public TagProgressBar(List<Map.Entry<Tag, Integer>> entry) {
+        FlatLightLaf.setup();
+        setLayout(new BorderLayout());
+        this.entry = entry; 
+        toppn = new JPanel(new GridLayout(6,1));
+        task = new JLabel("Tag");
+        task.setFont(new Font("Inter",Font.PLAIN,24));
+        sum = 0;
         
+        for (Map.Entry<Tag, Integer> toptag : entry) {
+            int count = toptag.getValue();
+            sum += count;
+        }      
         
+        toppn.add(task);
+        for (Map.Entry<Tag, Integer> toptag : entry) {
+            Tag tag = toptag.getKey();
+            int count = toptag.getValue();
+            JPanel bar  = createBar(count,tag.getName(), CusColor.hexToColorObject(tag.getColor().textColor));
+            toppn.add(bar);
+        }  
         
-        pa.add(ltag);fr.add(pa);
-        //Add row test
-        addTagRow("Test 1", CusColor.GRAY,10);
-        addTagRow("Test 2",CusColor.GREEN, 50);
-        fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        fr.pack();
-        fr.setVisible(true);
-        
+        add(toppn, BorderLayout.CENTER);
+        toppn.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); 
         
     }
-    
-    public void addTagRow(String name, CusColor color, int percent) {
-        JPanel row = createRow(name, color, percent);
-        row.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
-        pa.add(row);
-        pa.add(Box.createRigidArea(new Dimension(0, 10)));
-    }
-    
-    //Create Row Method
-    private JPanel createRow(String nameText, CusColor color, int percent) {
-        JPanel container = new JPanel(new BorderLayout());
-        container.setOpaque(false);
-
+    private JPanel createBar(int value,String name,Color color) {
+        JPanel pane = new JPanel(new BorderLayout(8, 4));
         JPanel top = new JPanel(new BorderLayout());
-
-        JLabel name = new JLabel(nameText);
-        JLabel value = new JLabel(String.valueOf(percent));
-
-        top.add(name, BorderLayout.WEST);
-        top.add(value, BorderLayout.EAST);
-
-        JProgressBar bar = createBar(color, percent);
         
-        container.add(top, BorderLayout.NORTH);
-        container.add(bar, BorderLayout.SOUTH);
+        JLabel nameLabel = new JLabel(name);
+        nameLabel.setFont(new Font("Inter",Font.PLAIN,16));
+        JLabel dot = new JLabel("● ");
+        dot.setFont(new Font("Inter",Font.PLAIN,16));
+        dot.setForeground(color);
+        
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        wrapper.add(dot);
+        wrapper.add(nameLabel);
+        
+        JLabel nLabel = new JLabel(String.valueOf(value));
+        nLabel.setFont(new Font("Inter",Font.PLAIN,16));
+        
+        top.add(wrapper, BorderLayout.WEST);
+        top.add(nLabel, BorderLayout.EAST);
 
-        return container;
-    }
-    
-    //Create Bar Method
-    private JProgressBar createBar(CusColor color, int value) {
+        
         JProgressBar bar = new JProgressBar(0, 100);
-        bar.setValue(value);
-        
-        bar.setUI(new javax.swing.plaf.basic.BasicProgressBarUI());
-        bar.setForeground(CusColor.hexToColorObject(color.textColor));
+        bar.setValue((int)((value / (double) sum) * 100));
+
+        bar.putClientProperty( FlatClientProperties.STYLE, "arc: 999" );
+
+        bar.setForeground(color);
         bar.setBorderPainted(false);
         bar.setPreferredSize(new Dimension(300, 8));
+        
+        pane.add(top, BorderLayout.NORTH);
+        pane.add(bar, BorderLayout.CENTER);
 
-        return bar;
-    }
-    public static void main(String[] args) {
-        new TagProgressBar();
-    }
+        pane.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 0));
+        return pane;
+}
 }

@@ -11,60 +11,99 @@ package Todolist.ProgressBar;
  */
 import Todolist.Priority_Manage.CusColor;
 import Todolist.Priority_Manage.Priority;
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
-public class TaskProgressBar {
-    public JFrame fr;
+
+
+public class TaskProgressBar extends JPanel {
     public JPanel toppn,ptask,pur,phi,pmid,plo;
-    public JLabel task,ur,hi,mid,lo;
-    public JLabel nur,nhi,nmid,nlo;
-    public JProgressBar pbur,pbhi,pbmid,pblo;
+    public JLabel task;
+    public JPanel pbur,pbhi,pbmid,pblo;
     public Priority priority;
-    public TaskProgressBar(){
-        fr = new JFrame();
+    private int sum;
+    public ArrayList<Integer> status;
+    public TaskProgressBar(ArrayList<Integer> status){
+        FlatLightLaf.setup();
+        this.status = status; 
         toppn = new JPanel(new GridLayout(5,1));ptask = new JPanel(new BorderLayout());pur = new JPanel(new BorderLayout());phi = new JPanel(new BorderLayout());pmid = new JPanel(new BorderLayout());plo = new JPanel(new BorderLayout());
-        task = new JLabel("Task Priorities");ur = new JLabel("Urgent/Critical");hi = new JLabel("High Priority");
-        mid = new JLabel("Medium Priority");lo = new JLabel("Low Priority");
+        task = new JLabel("Task Priorities");
+        task.setFont(new Font("Inter",Font.PLAIN,24));
+
         
-        pbur = createBar(0, CusColor.hexToColorObject(Priority.priority.get(3).getColor().textColor)); // Urgent
-        pbhi = createBar(0, CusColor.hexToColorObject(Priority.priority.get(2).getColor().textColor)); // High
-        pbmid = createBar(0, CusColor.hexToColorObject(Priority.priority.get(1).getColor().textColor)); // Medium
-        pblo = createBar(0, CusColor.hexToColorObject(Priority.priority.get(0).getColor().textColor)); // Low
+        sum = 0;
+        for (int number : status) {
+            sum += number;
+        }
+                
         
-        nur = new JLabel("0");nhi = new JLabel("0");nmid = new JLabel("0");nlo = new JLabel("0");
+        int urgentCount = status.get(3);
+        int highCount = status.get(2);
+        int mediumCount = status.get(1);
+        int lowCount = status.get(0);
+
+        System.out.println("LLLLLLLLL         "+lowCount);
+
+        
+        
+        pbur  = createBar(urgentCount,"Urgent", CusColor.hexToColorObject(Priority.priority.get(3).getColor().textColor)); //Urgent
+        pbhi  = createBar(highCount, "High",CusColor.hexToColorObject(Priority.priority.get(2).getColor().textColor)); //High
+        pbmid = createBar(mediumCount,"Medium", CusColor.hexToColorObject(Priority.priority.get(1).getColor().textColor)); //Medium
+        pblo  = createBar(lowCount,"Low", CusColor.hexToColorObject(Priority.priority.get(0).getColor().textColor)); //Low
+        
+        
+
         
         toppn.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        nur.setText(String.valueOf(pbur.getValue()));nhi.setText(String.valueOf(pbhi.getValue()));
-        nmid.setText(String.valueOf(pbmid.getValue()));nlo.setText(String.valueOf(pblo.getValue()));
         
         ptask.add(task);
-        pur.add(ur,BorderLayout.WEST);pur.add(nur,BorderLayout.EAST);pur.add(pbur,BorderLayout.SOUTH);
-        phi.add(hi,BorderLayout.WEST);phi.add(nhi,BorderLayout.EAST);phi.add(pbhi,BorderLayout.SOUTH);
-        pmid.add(mid,BorderLayout.WEST);pmid.add(nmid,BorderLayout.EAST);pmid.add(pbmid,BorderLayout.SOUTH);
-        plo.add(lo,BorderLayout.WEST);plo.add(nlo,BorderLayout.EAST);plo.add(pblo,BorderLayout.SOUTH);
+        pur.add(pbur,BorderLayout.SOUTH);
+        phi.add(pbhi,BorderLayout.SOUTH);
+        pmid.add(pbmid,BorderLayout.SOUTH);
+        plo.add(pblo,BorderLayout.SOUTH);
         
         toppn.add(ptask);
         toppn.add(pur);toppn.add(phi);toppn.add(pmid);toppn.add(plo);
-        fr.add(toppn);
+        add(toppn);
         
-        fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        fr.pack();
-        fr.setVisible(true);
     }
-    private JProgressBar createBar(int value, Color color) {
-        JProgressBar bar = new JProgressBar(0, 100);
-        bar.setValue(value);
+    private JPanel createBar(int value,String name,Color color) {
+        JPanel pane = new JPanel(new BorderLayout(8, 4));
+        JPanel top = new JPanel(new BorderLayout());
+        
+        JLabel nameLabel = new JLabel(name);
+        nameLabel.setFont(new Font("Inter",Font.PLAIN,16));
+        JLabel dot = new JLabel("● ");
+        dot.setFont(new Font("Inter",Font.PLAIN,16));
+        dot.setForeground(color);
+        
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        wrapper.add(dot);
+        wrapper.add(nameLabel);
+        
+        JLabel nLabel = new JLabel(String.valueOf(value));
+        nLabel.setFont(new Font("Inter",Font.PLAIN,16));
+        
+        top.add(wrapper, BorderLayout.WEST);
+        top.add(nLabel, BorderLayout.EAST);
 
-        bar.setUI(new javax.swing.plaf.basic.BasicProgressBarUI());
+        
+        JProgressBar bar = new JProgressBar(0, 100);
+        bar.setValue((int)((value / (double) sum) * 100));
+
+        bar.putClientProperty( FlatClientProperties.STYLE, "arc: 999" );
 
         bar.setForeground(color);
         bar.setBorderPainted(false);
         bar.setPreferredSize(new Dimension(300, 8));
+        
+        pane.add(top, BorderLayout.NORTH);
+        pane.add(bar, BorderLayout.CENTER);
 
-        return bar;
+        pane.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 0));
+        return pane;
 }
-    public static void main(String[] args) {
-        new TaskProgressBar();
-    }
 }

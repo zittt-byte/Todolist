@@ -217,8 +217,7 @@ public class User extends JFrame {
         pane.setPreferredSize(new Dimension(280, 120));
         pane.putClientProperty(FlatClientProperties.STYLE, "arc:16;background:#ffffff;border: 0,0,0,0,#fbbf23;");
         JLabel title = new JLabel("+");
-        pane.add(title);
-            
+        pane.add(title); 
         
         MouseAdapter hoverListener = new MouseAdapter() {
 
