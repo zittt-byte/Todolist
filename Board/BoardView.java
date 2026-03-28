@@ -48,6 +48,8 @@ public class BoardView extends JPanel implements ChangeListener ,ActionListener{
         ((BoardBarPanel)panelbar).left.setBackground(CusColor.hexToColorObject(this.board.getBanner().labelColor));
         ((BoardBarPanel)panelbar).center.setBackground(CusColor.hexToColorObject(this.board.getBanner().labelColor));
         ((BoardBarPanel)panelbar).right.setBackground(CusColor.hexToColorObject(this.board.getBanner().labelColor));
+        
+        render();
     }
     
      

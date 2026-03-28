@@ -21,7 +21,7 @@ public class Board implements ActionListener,java.io.Serializable {
     private final String uuid;
     private CusColor Banner; 
     private final LocalDate CreatedAt;
-    private ArrayList<Column> contains = new ArrayList<>(Arrays.asList(new Column("●Not Started","Gray",this),new Column("●In Progress","Blue",this),new Column("●Finished","Green",this)));
+    private transient ArrayList<Column> contains = new ArrayList<>(Arrays.asList(new Column("●Not Started","Gray",this),new Column("●In Progress","Blue",this),new Column("●Finished","Green",this)));
     private ArrayList<Priority> priority = new ArrayList<>(Arrays.asList(new Priority("Low",CusColor.GREEN,0),new Priority("Medium",CusColor.YELLOW,1),new Priority("High",CusColor.RED,2),new Priority("Urgent",CusColor.PURPLE,999)));
     private ArrayList<Task> Task_contain = new ArrayList<>();
     private ArrayList<Tag> Tag_contain = new ArrayList<>();
@@ -187,6 +187,12 @@ public class Board implements ActionListener,java.io.Serializable {
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         listenerList = new EventListenerList();
+        contains = new ArrayList<>(Arrays.asList(
+        new Column("●Not Started", "Gray", this),
+        new Column("●In Progress", "Blue", this),
+        new Column("●Finished",    "Green", this)
+    ));
+        
     }
     
     public void modifyTag(int index,String name,CusColor color) {

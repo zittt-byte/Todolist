@@ -16,7 +16,7 @@ import java.time.format.*;
  *
  * @Kanin
  */
-public class User extends JFrame implements WindowListener {
+public class User extends JFrame {
     public String name;
     public ArrayList<Board> Contains;
     public JPanel panel;
@@ -36,7 +36,14 @@ public class User extends JFrame implements WindowListener {
         DisplayBoard();
         setLocationRelativeTo(null);
         setVisible(true);
-        this.addWindowListener(this);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.out.println("saving");
+                saveObjectToFile(User.this.Contains,name);
+            }
+        });
+            
         
         
     }
@@ -250,6 +257,14 @@ public class User extends JFrame implements WindowListener {
         fr.add(b);
         fr.setLocationRelativeTo(null);
         fr.setVisible(true);
+        fr.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.out.println("saving");
+                saveObjectToFile(User.this.Contains,name);
+            }
+        });
+        
         System.out.println("Board clicked: " + board.getUuid());
         setVisible(false);
     }
@@ -338,31 +353,5 @@ public class User extends JFrame implements WindowListener {
     public static void main(String[] args) {
         FlatLightLaf.setup();
         new User("kanin");
-    }
-
-    @Override
-    public void windowOpened(WindowEvent e) {}
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-        System.out.println("saving");
-        saveObjectToFile(this.Contains,name);
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {}
-
-    @Override
-    public void windowIconified(WindowEvent e) {}
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {}
-
-    @Override
-    public void windowActivated(WindowEvent e) {}
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {}
-
-    
+    } 
 }

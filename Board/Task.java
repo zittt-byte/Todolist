@@ -28,10 +28,13 @@ public class Task extends JPanel implements java.io.Serializable {
     private final LocalDateTime CreatedAt = LocalDateTime.now();
     private LocalDateTime Deadline;
     
-    public JLabel icon_label,emojiLabel,titleLabel;
-    public JPanel wrapper,tagcollection;
-    private JLayeredPane layeredPane;
-    private Priority difficultyBadge;
+    
+    public transient JLabel icon_label,emojiLabel,titleLabel;
+    public transient JPanel wrapper,tagcollection;
+    private transient JLayeredPane layeredPane;
+    private transient Priority difficultyBadge;
+    
+    public JLayeredPane layeredpane;
     
     
     
@@ -47,7 +50,17 @@ public class Task extends JPanel implements java.io.Serializable {
         this.status   = status;
         this.Tag      = Tag;
         this.Deadline = Deadline;
+        
+        
+        initUI();
 
+        
+    }
+    
+    private void initUI() {
+        removeAll();
+
+        setOpaque(true);
         DragSource ds = DragSource.getDefaultDragSource();
 
         wrapper = new JPanel() {
@@ -86,7 +99,7 @@ public class Task extends JPanel implements java.io.Serializable {
         };
 
         wrapper.setLayout(new BorderLayout());
-        wrapper.setOpaque(false);
+        wrapper.setOpaque(true);
 
         tagcollection = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 2));
         tagcollection.setOpaque(false);
@@ -194,8 +207,13 @@ public class Task extends JPanel implements java.io.Serializable {
             dge.startDrag(DragSource.DefaultMoveDrop, t);
         });
         
-        
     }
+    
+    public void setCard(Color bg) {
+        setBackground(bg);
+    }
+
+
     
     public void refresh() {
         emojiLabel.setText(icon);
@@ -307,6 +325,12 @@ public class Task extends JPanel implements java.io.Serializable {
 
     public LocalDateTime getCreatedAt() {
         return CreatedAt;
+    }
+    
+    private void readObject(java.io.ObjectInputStream in) 
+            throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        initUI();
     }
     
     
