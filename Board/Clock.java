@@ -12,7 +12,7 @@ public class Clock extends JPanel implements Runnable {
     private JLabel dateLabel = new JLabel("");
     
     DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
-    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM - dd - yyyy");
+    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd - MM - yyyy");
 
     public Clock() {
         setLayout(new GridLayout(2, 1));
